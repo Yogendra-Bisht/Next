@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://utility-toolbox-phi.vercel.app/sitemap.xml
