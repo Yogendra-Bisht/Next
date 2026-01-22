@@ -6,7 +6,7 @@
 
 A high-performance, responsive developer portfolio website built with **Next.js 14 (App Router)** and **Tailwind CSS**. Features a modern "Dark & Frosted" glassmorphism UI, server-side rendering, and a working serverless contact form.
 
-🔗 **Live Demo:** [https://your-portfolio-link.vercel.app](https://your-portfolio-link.vercel.app)
+🔗 **Live Demo:** [https://your-portfolio-link.vercel.app](https://my-portfolio-nine-jet-47.vercel.app/)
 
 ---
 
@@ -35,7 +35,6 @@ A high-performance, responsive developer portfolio website built with **Next.js 
 
 Follow these steps to run the project on your local machine:
 
-### 1. Clone the repository
+### 1. Install dependencies
 ```bash
-git clone [https://github.com/YOUR_USERNAME/your-repo-name.git](https://github.com/YOUR_USERNAME/your-repo-name.git)
-cd your-repo-name
+npm install
