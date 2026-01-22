@@ -15,8 +15,8 @@ const PROJECTS = [
     title: "Portfolio Website",
     description: "My personal digital garden. Built with Next.js 14 App Router and Tailwind CSS. Features a modern glassmorphism UI and responsive design.",
     techStack: ["Next.js", "Tailwind CSS", "Framer Motion"],
-    githubLink: "https://github.com/YOUR_USERNAME/portfolio",
-    liveLink: "https://yogendra.dev", 
+    githubLink: "https://github.com/Yogendra-Bisht/Next/tree/main/my-portfolio",
+    liveLink: "https://my-portfolio-nine-jet-47.vercel.app/", 
     status: "Completed",
     color: "from-purple-500 to-pink-500"
   },
@@ -24,7 +24,7 @@ const PROJECTS = [
     title: "Utility Toolbox",
     description: "A collection of some tools like password generator, OTP generator, Random number generator in a range, just created for practice my skills in next.js, but some updates are needed and it will be updated soon. ",
     techStack: ["Next.js", "Tailwind",],
-    githubLink: "https://github.com/YOUR_USERNAME/dsa-library",
+    githubLink: "https://github.com/Yogendra-Bisht/Next/tree/main/first",
     liveLink: "https://utility-toolbox-phi.vercel.app", 
     status: "Completed",
     color: "from-emerald-500 to-teal-500"
