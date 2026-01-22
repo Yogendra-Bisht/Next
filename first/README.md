@@ -1,36 +1,36 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
+Utility Toolbox
+A modern, fast, and minimal collection of essential web tools built with Next.js 15 and Tailwind CSS. Designed for developers and students who need quick access to utility functions with a premium UI.
 
-## Getting Started
+🚀 Live Demo
+Check out the live application here: https://utility-toolbox-phi.vercel.app
 
-First, run the development server:
+✨ Features
+OTP Generator: Secure 4-6 digit one-time password generation.
+Password Architect: Highly customizable secure password generator with strength indicators.
+Range Randomizer: Get a random number between any two values.
+Virtual Dice: 3D-styled dice roller for quick decision-making.
+🛠️ Tech Stack
+Framework: Next.js 15 (App Router)
+Styling: Tailwind CSS (Glassmorphism UI)
+Icons: Lucide React
+Deployment: Vercel
+🚧 Upcoming Enhancements
+ One-Click Copy: Add "Copy to Clipboard" functionality for all tools.
+ Theme Toggle: Dynamic Light/Dark mode switching.
+ UI Polish: Transitioning components to a more refined Glassmorphism aesthetic.
+ Unit Converter: Adding a new tool for common unit conversions.
+🤝 How to Contribute
+I am building this project in public and would love your help! Whether you want to fix a bug, improve the UI, or add a new tool, follow these steps:
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
+Fork the Project
+Create your Feature Branch (git checkout -b feature/AmazingFeature)
+Commit your Changes (git commit -m 'Add some AmazingFeature')
+Push to the Branch (git push origin feature/AmazingFeature)
+Open a Pull Request
+📝 License
+Distributed under the MIT License. See LICENSE for more information.
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+👤 Contact
+Yogendra Bisht LinkedIn: www.linkedin.com/in/yogendra-bisht-7b4b63288 Project Link: https://github.com/Yogendra-Bisht/Next
 
-You can start editing the page by modifying `app/page.js`. The page auto-updates as you edit the file.
-
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
-
-## Learn More
-
-To learn more about Next.js, take a look at the following resources:
-
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+A huge thanks to all my mentors and the developer community!
