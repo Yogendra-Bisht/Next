@@ -31,10 +31,3 @@ A high-performance, responsive developer portfolio website built with **Next.js 
 
 ---
 
-## 🚀 Getting Started Locally
-
-Follow these steps to run the project on your local machine:
-
-### 1. Install dependencies
-```bash
-npm install
