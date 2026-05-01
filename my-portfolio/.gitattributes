@@ -1,0 +1,23 @@
+# Treat all PDF files as binary — prevents CRLF line-ending corruption
+*.pdf binary
+
+# Treat common image/font/media files as binary
+*.png binary
+*.jpg binary
+*.jpeg binary
+*.gif binary
+*.ico binary
+*.svg text
+*.woff binary
+*.woff2 binary
+*.ttf binary
+*.eot binary
+
+# Treat source files with LF line endings
+*.js text eol=lf
+*.jsx text eol=lf
+*.ts text eol=lf
+*.tsx text eol=lf
+*.css text eol=lf
+*.json text eol=lf
+*.mjs text eol=lf
