@@ -2,7 +2,7 @@ import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import Navbar from "./Components/Navbar";
 import Footer from "./Components/Footer";
-import ChatWidget from "./components/ChatWidget";
+import ChatWidget from "./Components/ChatWidget";
 import { SpeedInsights } from "@vercel/speed-insights/next"
 
 const geistSans = Geist({
