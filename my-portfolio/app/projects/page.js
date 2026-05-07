@@ -8,9 +8,9 @@ const PROJECTS = [
     description:
       "Full-stack platform to streamline accommodation discovery for students near universities. RESTful API with Node.js & Express.js, MongoDB for storage, and auth with search/filter features.",
     techStack: ["React.js", "Node.js", "Express.js", "MongoDB"],
-    githubLink: "#",
-    liveLink: null,
-    status: "Upcoming",
+    githubLink: "https://github.com/Yogendra-Bisht/SRAP",
+    liveLink: "https://srap-ten.vercel.app/",
+    status: "Live",
     statusStyle: "text-amber-400 bg-amber-400/10 border border-amber-400/30",
     color: "from-blue-500 to-cyan-500",
   },
