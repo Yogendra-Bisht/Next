@@ -36,6 +36,18 @@ const PROJECTS = [
     statusStyle: "text-emerald-400 bg-emerald-400/10 border border-emerald-400/30",
     color: "from-emerald-500 to-teal-500",
   },
+  {
+    title: "zodify-json",
+    tagline: "Client-Side JSON to Zod Schema Generator",
+    description:
+      "A lightning-fast developer utility that dynamically parses raw JSON objects entirely in the browser and instantly generates valid Zod validation schemas along with inferred TypeScript type definitions — eliminating runtime validation boilerplate.",
+    techStack: ["Next.js", "React", "Tailwind CSS", "Google Antigravity", "Vercel"],
+    githubLink: "https://github.com/Yogendra-Bisht/zodify-json",
+    liveLink: "https://zodify-json.vercel.app",
+    status: "Live",
+    statusStyle: "text-emerald-400 bg-emerald-400/10 border border-emerald-400/30",
+    color: "from-violet-500 to-indigo-500",
+  },
 ];
 
 const container = {
@@ -94,8 +106,11 @@ export default function Projects() {
                   )}
                   {project.status}
                 </div>
-                <div className="absolute bottom-4 left-5">
-                  <h3 className="text-lg font-bold text-white drop-shadow">{project.title}</h3>
+                <div className="absolute bottom-4 left-5 right-4">
+                  <h3 className="text-lg font-bold text-white drop-shadow leading-tight">{project.title}</h3>
+                  {project.tagline && (
+                    <p className="text-xs text-white/70 mt-0.5 font-medium drop-shadow">{project.tagline}</p>
+                  )}
                 </div>
               </div>
 
