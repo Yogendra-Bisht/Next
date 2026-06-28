@@ -6,9 +6,9 @@ const EDUCATION = [
   {
     degree: "Master of Computer Applications (MCA)",
     institution: "HNB Garhwal University",
-    period: "Currently Pursuing",
+    period: "2024 - 2026",
     icon: "🎓",
-    highlight: true,
+    highlight: false,
   },
   {
     degree: "B.Sc. — Physics, Mathematics & IT",
