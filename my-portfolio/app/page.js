@@ -4,10 +4,10 @@ import Link from "next/link";
 import { motion } from "framer-motion";
 
 const ROLES = [
-  "Frontend Web Developer",
-  "React.js & Next.js Specialist",
-  "Java & DSA Enthusiast",
-  "Open to Work 🚀",
+  "Full Stack Web Developer",
+  "Next.js & MERN Stack Developer",
+  "Java & DSA ",
+  "Open to Work ",
 ];
 
 const SKILLS = [
@@ -87,7 +87,7 @@ export default function Home() {
             variants={item}
             className="text-4xl font-bold tracking-tight text-white sm:text-6xl"
           >
-            Hi, I&apos;m Yogendra Bisht
+            Hi, I&apos;m Yogendra Singh
           </motion.h1>
 
           <motion.div variants={item} className="mt-4 text-xl sm:text-2xl font-semibold h-9">
@@ -98,9 +98,9 @@ export default function Home() {
             MCA candidate at{" "}
             <span className="text-white font-medium">HNB Garhwal University</span> — building
             scalable web apps with{" "}
-            <span className="text-cyan-400">React.js</span>,{" "}
-            <span className="text-cyan-400">Next.js</span>, and{" "}
-            <span className="text-cyan-400">Java</span>.
+            <span className="text-cyan-400">React.js</span> and{" "}
+            <span className="text-cyan-400">Next.js</span>,{" "}
+            {/* <span className="text-cyan-400">Java</span>. */}
           </motion.p>
 
           <motion.div variants={item} className="mt-10 flex items-center justify-center gap-x-6">
