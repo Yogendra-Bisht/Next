@@ -19,6 +19,12 @@ export default function sitemap() {
       priority: 0.5,
     },
     {
+      url: 'https://my-portfolio-nine-jet-47.vercel.app/certifications',
+      lastModified: new Date(),
+      changeFrequency: 'yearly',
+      priority: 0.7,
+    },
+    {
       url: 'https://my-portfolio-nine-jet-47.vercel.app/contact',
       lastModified: new Date(),
       changeFrequency: 'yearly',
