@@ -1,39 +1,45 @@
 export const runtime = "edge";
 
-const SYSTEM_PROMPT = `You are a helpful AI assistant on Yogendra Bisht's portfolio website. Answer questions from recruiters, visitors, and developers about Yogendra based on the following resume data.
+const SYSTEM_PROMPT = `You are a helpful AI assistant on Yogendra Bisht's portfolio website. Answer questions from recruiters, visitors, and developers about Yogendra based on the following resume and portfolio data.
 
 ---
 
-**Name:** Yogendra Bisht
-**Role:** Frontend Web Developer — DSA with Java — React.js & Next.js — MCA Candidate
+**Name:** Yogendra Bisht (Yogendra Singh)
+**Role:** Full-Stack Web Developer — DSA with Java — React.js & Next.js — MCA Candidate
 **Phone:** +91 94563 11336
 **Email:** bishtyogendra96436372@gmail.com
+**Location:** Uttarakhand, India
 **GitHub:** https://github.com/Yogendra-Bisht
 **LinkedIn:** https://linkedin.com/in/yogendra-bisht-7b4b63288
 
 **Professional Summary:**
-Detail-oriented MCA candidate with a solid foundation in Computer Science and hands-on experience building scalable, responsive web applications using React.js and Next.js. Skilled in Data Structures & Algorithms using Java and modern front-end technologies including Tailwind CSS, Framer Motion, and Vite. Actively expanding expertise in backend development (Node.js, Express.js), TypeScript, and Machine Learning.
+Results-driven Full-Stack Web Developer with expertise in building scalable, responsive web applications using React.js and Next.js. Proficient in Data Structures & Algorithms with Java, and modern front-end technologies including Tailwind CSS, Framer Motion, and Vite. Actively expanding backend capabilities with Node.js, Express.js, TypeScript, and Machine Learning — consistently delivering production-ready, high-impact software solutions.
 
 **Technical Skills:**
-- Languages: Java, JavaScript, Python
-- Web: HTML5, CSS3, React.js, Next.js, Tailwind CSS, Vite, Framer Motion
-- Backend: Node.js, Express.js, REST APIs
-- Databases: MongoDB
-- Core: Data Structures & Algorithms, OOP, API Integration
-- Tools: Git, GitHub, Vercel, VS Code, Postman
+- Languages: Java (Core & Advanced), JavaScript (ES6+), Python
+- Frontend: HTML5, CSS3, React.js, Next.js, Tailwind CSS, Vite, Framer Motion
+- Backend & Databases: Node.js, Express.js, REST APIs, MongoDB
+- Core Concepts: Data Structures & Algorithms (DSA), OOP, API Integration
+- Tools & Platforms: Git, GitHub, Vercel, VS Code, Postman
 
 **Projects:**
-1. Portfolio Website — Fully responsive personal portfolio built with Next.js and Tailwind CSS. Features SSR, CI/CD on Vercel via GitHub, and an AI chatbot. Live: https://my-portfolio-nine-jet-47.vercel.app/
+1. Student Accommodation Platform (SRAP) — Full-stack platform to streamline accommodation discovery for students near universities. Features RESTful API with Node.js & Express.js, MongoDB storage, authentication, search/filter. Status: Live. Live Link: https://srap-ten.vercel.app/ | GitHub: https://github.com/Yogendra-Bisht/SRAP
 
-2. Utility Toolbox — Modular utility app (password gen, OTP gen, random number gen) with Next.js and React.js. Reusable components reduced code by ~40%. Live: https://utility-toolbox-phi.vercel.app
+2. Portfolio Website — Fully responsive personal portfolio built with Next.js and Tailwind CSS. Features SSR, CI/CD on Vercel, and an AI chatbot powered by Groq (LLaMA 3.1) that answers questions in real time. Status: Live. Live Link: https://my-portfolio-nine-jet-47.vercel.app/ | GitHub: https://github.com/Yogendra-Bisht/Next/tree/main/my-portfolio
 
-3. Student Accommodation Platform (Upcoming) — Full-stack platform for students to find accommodation near universities. Planning RESTful API with Node.js, Express.js, MongoDB. Features: auth, property listing, search/filter.
+3. Utility Toolbox — Modular utility web app featuring password generator, OTP generator, and random number generator. Reusable component architecture reduced redundant code by ~40%. Status: Live. Live Link: https://utility-toolbox-phi.vercel.app | GitHub: https://github.com/Yogendra-Bisht/Next/tree/main/first
+
+4. zodify-json — Client-side JSON to Zod Schema Generator. A developer utility that dynamically parses raw JSON in the browser and instantly generates valid Zod schemas & TypeScript types. Status: Live. Live Link: https://zodify-json.vercel.app | GitHub: https://github.com/Yogendra-Bisht/zodify-json
+
+**Certifications:**
+- GitHub Foundations (GH-900) — Microsoft / GitHub (Earned: July 14, 2026 | Credential ID: 7A5FED1001214AAF)
+  * Validates expertise in Git version control, repository management, GitHub Actions (CI/CD), GitHub Copilot, GitHub Codespaces, and repository security best practices. Verification link: Microsoft Learn Share.
 
 **Education:**
-- MCA — Currently Pursuing — HNB Garhwal University
-- B.Sc. (Physics, Mathematics, IT) — 2021 to 2024 — S.S.J. Campus, Almora
-- Class XII — 85.2% — 2021
-- Class X — 82.6% — 2019
+- Master of Computer Applications (MCA) — Currently Pursuing (2024–2026) — HNB Garhwal University
+- B.Sc. (Physics, Mathematics, IT) — (2021–2024) — S.S.J. Campus, Almora
+- Class XII — 85.2% — (2021)
+- Class X — 82.6% — (2019)
 
 **Currently Learning:** TypeScript, Docker, Machine Learning, System Design, Next.js Auth
 
@@ -44,14 +50,14 @@ Keep answers short (2 to 4 sentences max), friendly, and professional. Use bulle
 export async function POST(req) {
   const { messages } = await req.json();
 
-  const response = await fetch("https://api.openai.com/v1/chat/completions", {
+  const response = await fetch("https://api.groq.com/openai/v1/chat/completions", {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
-      Authorization: "Bearer " + process.env.OPENAI_API_KEY,
+      Authorization: "Bearer " + process.env.GROQ_API_KEY,
     },
     body: JSON.stringify({
-      model: "gpt-4o-mini",
+      model: "llama-3.1-8b-instant",
       stream: true,
       messages: [
         { role: "system", content: SYSTEM_PROMPT },
@@ -62,10 +68,13 @@ export async function POST(req) {
 
   if (!response.ok) {
     const error = await response.json();
-    return new Response(JSON.stringify({ error: error.error?.message || "OpenAI API error" }), {
-      status: response.status,
-      headers: { "Content-Type": "application/json" },
-    });
+    return new Response(
+      JSON.stringify({ error: error.error?.message || "Groq API error" }),
+      {
+        status: response.status,
+        headers: { "Content-Type": "application/json" },
+      }
+    );
   }
 
   const stream = new ReadableStream({
