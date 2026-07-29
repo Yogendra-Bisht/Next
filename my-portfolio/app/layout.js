@@ -19,7 +19,11 @@ export const metadata = {
   title: "Yogendra Bisht | Full-Stack Developer",
   description: "Portfolio of Yogendra Bisht — MCA student specializing in Next.js, React, Java, and DSA. Explore my projects and get in touch!",
   keywords: ["Yogendra Bisht", "portfolio", "Next.js developer", "React", "Java", "full-stack"],
+  verification: {
+    google: "27aVhN8bmTpfZVLu1e6P0_FhwbqQ0IDLXoqCGo1L_Kc",
+  },
 };
+
 
 export default function RootLayout({ children }) {
   return (
