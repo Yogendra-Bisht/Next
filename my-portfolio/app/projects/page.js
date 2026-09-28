@@ -1,7 +1,7 @@
 "use client";
 import Link from "next/link";
 import { motion } from "framer-motion";
-import { ExternalLink, Sparkles, Terminal, Code2, Layers, CheckCircle2 } from "lucide-react";
+import { ExternalLink, Sparkles, Terminal, Code2, Layers, CheckCircle2, ShieldCheck, Cpu, Pin } from "lucide-react";
 
 const GithubIcon = (props) => (
   <svg fill="currentColor" viewBox="0 0 24 24" {...props}>
@@ -9,24 +9,92 @@ const GithubIcon = (props) => (
   </svg>
 );
 
+const PINNED_PROJECTS = [
+  {
+    id: "wordcatch",
+    badgeNumber: "PINNED FLAGSHIP 01",
+    title: "WordCatch",
+    tagline: "Manifest V3 Browser Extension & Vocabulary Building Engine",
+    description:
+      "A full-stack browser extension that turns passive reading into active vocabulary building. Engineered with Manifest V3 background service workers, closed Shadow DOM tooltips for zero host-CSS leakage, and a Node.js/Express REST API backed by MongoDB Atlas with smart multi-tier caching and morphological fallbacks.",
+    techStack: ["Browser Extension MV3", "Shadow DOM", "Node.js", "Express.js", "MongoDB Atlas", "Docker", "JWT", "Jest"],
+    githubLink: "https://github.com/Yogendra-Bisht/WordCatch",
+    liveLink: "https://wordcatch.onrender.com/health",
+    status: "In Edge Review & Render Live",
+    features: [
+      "Closed Shadow DOM tooltip isolates UI from host website CSS conflicts",
+      "Service Worker JWT custody prevents content-script network credential exposure",
+      "Multi-tier lookup strategy (Cache → External Dictionary API → Negative Cache)",
+      "Morphological lemma resolution (e.g. running → run, studies → study)",
+    ],
+    codeSnippet: `// extension/background/service-worker.js (MV3)
+chrome.runtime.onMessage.addListener((msg, sender, sendResponse) => {
+  if (msg.type === "LOOKUP_WORD") {
+    fetch(\`\${API_URL}/api/words/lookup\`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        "Authorization": \`Bearer \${jwtToken}\`
+      },
+      body: JSON.stringify({ word: msg.word })
+    })
+    .then(res => res.json())
+    .then(data => sendResponse({ ok: true, data }))
+    .catch(err => sendResponse({ ok: false, err }));
+    return true; // Async channel
+  }
+});`,
+  },
+  {
+    id: "srap",
+    badgeNumber: "PINNED FLAGSHIP 02",
+    title: "Student Accommodation Platform",
+    tagline: "Full-Stack Discovery & Housing Search Engine",
+    description:
+      "A comprehensive web platform engineered to simplify accommodation discovery near university campuses. Features a RESTful backend built with Node.js & Express, MongoDB document storage, secure JWT user authentication, and real-time interactive search filters.",
+    techStack: ["React.js", "Node.js", "Express.js", "MongoDB Atlas", "JWT Auth", "REST API"],
+    githubLink: "https://github.com/Yogendra-Bisht/SRAP",
+    liveLink: "https://srap-ten.vercel.app/",
+    status: "Live Production",
+    features: [
+      "Location-based university proximity searching and radius filtering",
+      "RESTful API architecture with JWT authentication & password hashing",
+      "Interactive search filters, detailed room listings & responsive UI components",
+    ],
+    codeSnippet: `// server/routes/accommodation.js (Express REST API)
+router.get("/search", async (req, res) => {
+  const { city, maxPrice } = req.query;
+  const listings = await Accommodation.find({
+    city,
+    price: { $lte: maxPrice }
+  }).populate("owner");
 
-const FEATURED_PROJECT = {
-  title: "Student Accommodation Platform",
-  tagline: "Full-Stack Discovery Platform for Students",
-  description:
-    "A comprehensive web platform engineered to simplify accommodation discovery near university campuses. Features a RESTful backend built with Node.js & Express, MongoDB document storage, secure JWT user authentication, and interactive search filters.",
-  techStack: ["React.js", "Node.js", "Express.js", "MongoDB", "REST API"],
-  githubLink: "https://github.com/Yogendra-Bisht/SRAP",
-  liveLink: "https://srap-ten.vercel.app/",
-  status: "Live Production",
-  features: [
-    "Location-based university proximity searching",
-    "Restful API architecture with JWT Auth",
-    "Real-time filter & responsive UI components",
-  ],
-};
+  res.status(200).json({ success: true, listings });
+});`,
+  },
+];
 
 const SECONDARY_PROJECTS = [
+  {
+    title: "Cosmos Dashboard",
+    tagline: "Interactive Analytics & Data Hub",
+    description:
+      "Modern interactive analytics dashboard web application built with Next.js App Router, React 19, and Tailwind CSS. Provides modular data visualization components and real-time interface widgets.",
+    techStack: ["Next.js 16", "React 19", "Tailwind CSS", "TypeScript"],
+    githubLink: "https://github.com/Yogendra-Bisht/cosmos-dashboard",
+    liveLink: "https://cosmos-dashboard-sandy.vercel.app/",
+    status: "Live",
+  },
+  {
+    title: "ClearRoute UK",
+    tagline: "Route & Incident Visualization Platform",
+    description:
+      "A UK-focused route and incident mapping platform built with Next.js App Router and TypeScript. Features interactive map container UI, radius search filtering, predictive incident timelines, and crowd-sourced reporting.",
+    techStack: ["Next.js", "TypeScript", "React", "Map UI", "Tailwind CSS"],
+    githubLink: "https://github.com/Yogendra-Bisht/clear-route-uk",
+    liveLink: null,
+    status: "In Development",
+  },
   {
     title: "zodify-json",
     tagline: "Client-Side JSON to Zod Schema Generator",
@@ -38,7 +106,7 @@ const SECONDARY_PROJECTS = [
     status: "Live Utility",
   },
   {
-    title: "Portfolio Website",
+    title: "Engineering Portfolio",
     tagline: "Personal Engineering Portfolio & AI Assistant",
     description:
       "Modern portfolio built with Next.js App Router and Tailwind CSS. Integrated with a streaming Groq LLaMA 3.1 AI chatbot assistant, Framer Motion transitions, and speed insights.",
@@ -91,114 +159,120 @@ export default function Projects() {
             Engineering Showcase
           </span>
           <h1 className="text-3xl font-extrabold tracking-tight text-[#FAF4E8] sm:text-5xl">
-            Selected <span className="text-[#F8E7C9] font-serif italic">Projects</span>
+            Featured <span className="text-[#F8E7C9] font-serif italic">Projects</span>
           </h1>
           <p className="mt-4 text-base sm:text-lg text-[#D4C3A3] max-w-xl mx-auto">
-            A curated portfolio of full-stack applications, developer utilities, and modern web platforms.
+            A curated portfolio of browser extensions, full-stack platforms, developer utilities, and modern cloud applications.
           </p>
         </motion.div>
 
-        {/* FEATURED SHOWCASE PROJECT (Full-Width Editorial Card) */}
-        <motion.div
-          className="mb-16"
-          initial={{ opacity: 0, y: 30 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6, delay: 0.15 }}
-        >
-          <div className="bg-gradient-to-br from-[#064E3B]/40 to-[#022C22]/90 border border-[#F8E7C9]/30 rounded-3xl p-6 sm:p-10 backdrop-blur-xl shadow-2xl relative overflow-hidden">
-            
-            {/* Header Badge */}
-            <div className="flex flex-wrap items-center justify-between gap-4 mb-6">
-              <span className="text-xs font-mono font-bold tracking-widest text-[#F8E7C9] uppercase flex items-center gap-1.5">
-                <Terminal className="w-4 h-4" /> Featured Flagship Application
-              </span>
-              <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-semibold bg-[#10B981]/15 text-[#34D399] border border-[#10B981]/30">
-                <span className="w-2 h-2 rounded-full bg-[#34D399] animate-pulse" />
-                {FEATURED_PROJECT.status}
-              </span>
-            </div>
+        {/* PINNED FLAGSHIP PROJECTS SECTION (2 Editorial Cards) */}
+        <div className="space-y-12 mb-20">
+          {PINNED_PROJECTS.map((project, index) => (
+            <motion.div
+              key={project.id}
+              initial={{ opacity: 0, y: 30 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.6, delay: index * 0.15 }}
+            >
+              <div className="bg-gradient-to-br from-[#064E3B]/50 via-[#043327] to-[#022C22]/90 border border-[#F8E7C9]/35 rounded-3xl p-6 sm:p-10 backdrop-blur-xl shadow-2xl relative overflow-hidden">
+                
+                {/* Header Badge */}
+                <div className="flex flex-wrap items-center justify-between gap-4 mb-6">
+                  <span className="text-xs font-mono font-bold tracking-widest text-[#F8E7C9] uppercase flex items-center gap-1.5 bg-[#064E3B]/80 px-3 py-1 rounded-full border border-[#F8E7C9]/20 shadow-sm">
+                    <Pin className="w-3.5 h-3.5 text-[#F8E7C9]" /> {project.badgeNumber}
+                  </span>
+                  <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-semibold bg-[#10B981]/15 text-[#34D399] border border-[#10B981]/30">
+                    <span className="w-2 h-2 rounded-full bg-[#34D399] animate-pulse" />
+                    {project.status}
+                  </span>
+                </div>
 
-            <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-center">
-              <div className="lg:col-span-7 space-y-4">
-                <h2 className="text-2xl sm:text-3xl font-extrabold text-[#FAF4E8]">
-                  {FEATURED_PROJECT.title}
-                </h2>
-                <p className="text-sm font-medium text-[#F8E7C9]/90 italic font-serif">
-                  {FEATURED_PROJECT.tagline}
-                </p>
-                <p className="text-sm text-[#D4C3A3] leading-relaxed">
-                  {FEATURED_PROJECT.description}
-                </p>
+                <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-center">
+                  <div className="lg:col-span-7 space-y-4">
+                    <h2 className="text-3xl sm:text-4xl font-extrabold text-[#FAF4E8]">
+                      {project.title}
+                    </h2>
+                    <p className="text-sm sm:text-base font-medium text-[#F8E7C9] italic font-serif">
+                      {project.tagline}
+                    </p>
+                    <p className="text-sm text-[#D4C3A3] leading-relaxed">
+                      {project.description}
+                    </p>
 
-                {/* Key Features List */}
-                <div className="pt-2 space-y-2">
-                  {FEATURED_PROJECT.features.map((feat, idx) => (
-                    <div key={idx} className="flex items-center gap-2 text-xs text-[#FAF4E8]">
-                      <CheckCircle2 className="w-4 h-4 text-[#34D399] shrink-0" />
-                      <span>{feat}</span>
+                    {/* Key Features List */}
+                    <div className="pt-2 space-y-2">
+                      {project.features.map((feat, idx) => (
+                        <div key={idx} className="flex items-start gap-2 text-xs text-[#FAF4E8]">
+                          <CheckCircle2 className="w-4 h-4 text-[#34D399] shrink-0 mt-0.5" />
+                          <span>{feat}</span>
+                        </div>
+                      ))}
                     </div>
-                  ))}
+
+                    {/* Tech Badges */}
+                    <div className="flex flex-wrap gap-2 pt-3">
+                      {project.techStack.map((tech) => (
+                        <span
+                          key={tech}
+                          className="px-3 py-1 text-xs font-medium text-[#F8E7C9] bg-[#064E3B] rounded-full border border-[#F8E7C9]/25 shadow-sm"
+                        >
+                          {tech}
+                        </span>
+                      ))}
+                    </div>
+
+                    {/* Actions */}
+                    <div className="flex flex-wrap gap-3 pt-4">
+                      {project.liveLink && (
+                        <a
+                          href={project.liveLink}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="px-5 py-2.5 rounded-full bg-[#F8E7C9] text-[#022C22] font-semibold text-xs hover:bg-[#FAF4E8] hover:scale-105 transition duration-300 shadow-lg flex items-center gap-2"
+                        >
+                          <ExternalLink className="w-4 h-4" /> Live Platform
+                        </a>
+                      )}
+                      <a
+                        href={project.githubLink}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="px-5 py-2.5 rounded-full bg-[#064E3B]/60 text-[#FAF4E8] font-medium text-xs border border-[#F8E7C9]/30 hover:border-[#F8E7C9] transition flex items-center gap-2"
+                      >
+                        <GithubIcon className="w-4 h-4" /> Source Repository
+                      </a>
+                    </div>
+                  </div>
+
+                  {/* Right Decorative Code Preview Pane */}
+                  <div className="lg:col-span-5 bg-[#041C16] border border-[#F8E7C9]/25 rounded-2xl p-5 font-mono text-xs text-[#D4C3A3] shadow-2xl space-y-3 hidden lg:block">
+                    <div className="flex items-center justify-between text-[11px] text-[#F8E7C9]/80 pb-2 border-b border-[#F8E7C9]/15">
+                      <span className="flex items-center gap-1.5">
+                        <Terminal className="w-3.5 h-3.5 text-[#34D399]" /> Architecture Snippet
+                      </span>
+                      <span className="text-[#34D399]">Production</span>
+                    </div>
+                    <pre className="text-[11px] leading-relaxed text-[#FAF4E8] overflow-x-auto whitespace-pre">
+                      {project.codeSnippet}
+                    </pre>
+                  </div>
                 </div>
 
-                {/* Tech Badges */}
-                <div className="flex flex-wrap gap-2 pt-3">
-                  {FEATURED_PROJECT.techStack.map((tech) => (
-                    <span
-                      key={tech}
-                      className="px-3 py-1 text-xs font-medium text-[#F8E7C9] bg-[#064E3B] rounded-full border border-[#F8E7C9]/25 shadow-sm"
-                    >
-                      {tech}
-                    </span>
-                  ))}
-                </div>
-
-                {/* Actions */}
-                <div className="flex flex-wrap gap-3 pt-4">
-                  <a
-                    href={FEATURED_PROJECT.liveLink}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="px-5 py-2.5 rounded-full bg-[#F8E7C9] text-[#022C22] font-semibold text-xs hover:bg-[#FAF4E8] transition shadow-lg flex items-center gap-2"
-                  >
-                    <ExternalLink className="w-4 h-4" /> Live Platform Demo
-                  </a>
-                  <a
-                    href={FEATURED_PROJECT.githubLink}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="px-5 py-2.5 rounded-full bg-[#064E3B]/60 text-[#FAF4E8] font-medium text-xs border border-[#F8E7C9]/30 hover:border-[#F8E7C9] transition flex items-center gap-2"
-                  >
-                    <GithubIcon className="w-4 h-4" /> Source Repository
-                  </a>
-                </div>
               </div>
+            </motion.div>
+          ))}
+        </div>
 
-              {/* Right Decorative Code Preview Pane */}
-              <div className="lg:col-span-5 bg-[#041C16] border border-[#F8E7C9]/20 rounded-2xl p-5 font-mono text-xs text-[#D4C3A3] shadow-inner space-y-3 hidden lg:block">
-                <div className="flex items-center justify-between text-[11px] text-[#F8E7C9]/70 pb-2 border-b border-[#F8E7C9]/15">
-                  <span>server/routes/accommodation.js</span>
-                  <span className="text-[#34D399]">Express REST API</span>
-                </div>
-                <pre className="text-[11px] leading-relaxed text-[#FAF4E8] overflow-x-auto">
-{`router.get("/search", async (req, res) => {
-  const { city, maxPrice } = req.query;
-  const listings = await Accommodation.find({
-    city,
-    price: { $lte: maxPrice }
-  }).populate("owner");
-
-  res.status(200).json({ success: true, listings });
-});`}
-                </pre>
-              </div>
-            </div>
-
-          </div>
-        </motion.div>
+        {/* CURATED WORK BENTO GRID HEADER */}
+        <div className="text-center mb-10">
+          <h2 className="text-2xl font-extrabold text-[#FAF4E8]">Additional Projects &amp; Utilities</h2>
+          <p className="text-xs text-[#D4C3A3]/80 mt-1">More specialized tools, analytics dashboards, and web applications.</p>
+        </div>
 
         {/* CURATED WORK BENTO GRID */}
         <motion.div
-          className="grid grid-cols-1 md:grid-cols-3 gap-6"
+          className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6"
           variants={container}
           initial="hidden"
           whileInView="visible"
@@ -209,7 +283,7 @@ export default function Projects() {
               key={index}
               variants={cardVariant}
               whileHover={{ y: -6, transition: { duration: 0.2 } }}
-              className="bg-[#022C22]/80 border border-[#F8E7C9]/20 rounded-2xl p-6 hover:border-[#F8E7C9]/60 transition duration-300 flex flex-col justify-between shadow-xl"
+              className="bg-[#022C22]/85 border border-[#F8E7C9]/20 rounded-2xl p-6 hover:border-[#F8E7C9]/60 transition duration-300 flex flex-col justify-between shadow-xl"
             >
               <div>
                 <div className="flex items-center justify-between mb-3">
@@ -253,9 +327,9 @@ export default function Projects() {
                       href={project.liveLink}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="flex-1 py-2 rounded-xl bg-[#F8E7C9] text-[#022C22] hover:bg-[#FAF4E8] transition text-xs font-semibold flex items-center justify-center gap-1.5 shadow"
+                      className="flex-1 py-2 rounded-xl bg-[#F8E7C9] text-[#022C22] hover:bg-[#FAF4E8] transition text-xs font-semibold flex items-center justify-center gap-1.5 shadow-sm"
                     >
-                      <ExternalLink className="w-3.5 h-3.5" /> Live Demo
+                      <ExternalLink className="w-3.5 h-3.5" /> Demo
                     </a>
                   )}
                 </div>

@@ -1,6 +1,22 @@
 "use client";
-import { useState } from "react";
-import { Mail, Send, Sparkles, CheckCircle2 } from "lucide-react";
+import { useState, useEffect } from "react";
+import { motion } from "framer-motion";
+import {
+  Mail,
+  Send,
+  Sparkles,
+  CheckCircle2,
+  Copy,
+  Check,
+  MapPin,
+  Clock,
+  Phone,
+  MessageSquare,
+  Briefcase,
+  Terminal,
+  Zap,
+  Globe
+} from "lucide-react";
 
 const GithubIcon = (props) => (
   <svg fill="currentColor" viewBox="0 0 24 24" {...props}>
@@ -20,9 +36,41 @@ const InstagramIcon = (props) => (
   </svg>
 );
 
+const INQUIRY_TOPICS = [
+  { label: "💼 Full-Time Job Offer", text: "Hi Yogendra, I have a full-time engineering/DevOps opportunity that aligns with your background..." },
+  { label: "🚀 DevOps & Cloud Project", text: "Hi Yogendra, I need assistance setting up Docker containers, CI/CD pipelines, or AWS deployment..." },
+  { label: "💻 Web Application", text: "Hi Yogendra, I'm looking to build a modern React / Next.js web application..." },
+  { label: "☕ Tech Chat & Networking", text: "Hi Yogendra, I checked out your portfolio and wanted to connect!" },
+];
+
 export default function Contact() {
   const [result, setResult] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [copiedEmail, setCopiedEmail] = useState(false);
+  const [selectedTopic, setSelectedTopic] = useState("");
+  const [messageContent, setMessageContent] = useState("");
+  const [currentTime, setCurrentTime] = useState("");
+
+  useEffect(() => {
+    const updateIST = () => {
+      const options = { timeZone: "Asia/Kolkata", hour: "2-digit", minute: "2-digit", second: "2-digit" };
+      setCurrentTime(new Date().toLocaleTimeString("en-US", options) + " IST");
+    };
+    updateIST();
+    const interval = setInterval(updateIST, 1000);
+    return () => clearInterval(interval);
+  }, []);
+
+  const handleTopicClick = (topic) => {
+    setSelectedTopic(topic.label);
+    setMessageContent(topic.text);
+  };
+
+  const copyEmail = () => {
+    navigator.clipboard.writeText("bishtyogendra96436372@gmail.com");
+    setCopiedEmail(true);
+    setTimeout(() => setCopiedEmail(false), 2500);
+  };
 
   const onSubmit = async (event) => {
     event.preventDefault();
@@ -40,8 +88,10 @@ export default function Contact() {
       const data = await response.json();
 
       if (data.success) {
-        setResult("Success! Your message has been sent successfully.");
+        setResult("Success! Your message has been dispatched to Yogendra's inbox.");
         event.target.reset();
+        setMessageContent("");
+        setSelectedTopic("");
       } else {
         setResult("Error! Something went wrong while sending.");
       }
@@ -55,154 +105,260 @@ export default function Contact() {
   return (
     <div className="relative isolate px-4 sm:px-6 pt-12 lg:px-8 min-h-screen pb-24">
       
-      {/* Background Glow */}
+      {/* Subtle Background Glow */}
       <div className="absolute inset-x-0 -top-40 -z-10 transform-gpu overflow-hidden blur-3xl sm:-top-80">
         <div className="relative left-[calc(50%-11rem)] aspect-[1155/678] w-[36.125rem] -translate-x-1/2 rotate-[30deg] bg-gradient-to-tr from-[#064E3B] to-[#10B981] opacity-25 sm:left-[calc(50%-30rem)] sm:w-[72.1875rem]" />
       </div>
 
-      <div className="mx-auto max-w-2xl py-8">
+      <div className="mx-auto max-w-6xl py-8">
         
         {/* Header */}
-        <div className="text-center mb-12">
+        <motion.div
+          className="text-center mb-16"
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.5 }}
+        >
           <span className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-[#064E3B]/60 border border-[#F8E7C9]/30 text-[#F8E7C9] text-xs font-semibold tracking-wide shadow-sm mb-4">
-            <Sparkles className="w-3.5 h-3.5 text-[#F8E7C9]" />
-            Direct Communication
+            <span className="w-2 h-2 rounded-full bg-[#34D399] animate-pulse" />
+            Active Signal · Monitoring Communications
           </span>
           <h1 className="text-3xl font-extrabold tracking-tight text-[#FAF4E8] sm:text-5xl">
-            Let&apos;s <span className="text-[#F8E7C9] font-serif italic">Connect</span>
+            Let&apos;s Build <span className="text-[#F8E7C9] font-serif italic">Together</span>
           </h1>
-          <p className="mt-4 text-base sm:text-lg text-[#D4C3A3] max-w-lg mx-auto">
-            Have a project in mind, an opportunity to discuss, or just want to chat tech? Drop me a message below.
+          <p className="mt-4 text-base sm:text-lg text-[#D4C3A3] max-w-xl mx-auto leading-relaxed">
+            Have a project, job opportunity, or DevOps infrastructure query? Dispatch a message or copy direct contact credentials below.
           </p>
-        </div>
+        </motion.div>
 
-        {/* Contact Form */}
-        <form onSubmit={onSubmit} className="bg-[#022C22]/80 backdrop-blur-xl border border-[#F8E7C9]/25 p-6 sm:p-10 rounded-3xl shadow-2xl mb-12">
-          <div className="grid grid-cols-1 gap-y-6">
-            <div>
-              <label htmlFor="name" className="block text-xs font-bold uppercase tracking-wider text-[#F8E7C9] mb-2">
-                Your Name
-              </label>
-              <input
-                type="text"
-                name="name"
-                id="name"
-                required
-                placeholder="Yogendra Bisht"
-                className="block w-full rounded-xl border border-[#F8E7C9]/20 bg-[#064E3B]/30 px-4 py-3 text-sm text-[#FAF4E8] placeholder-[#D4C3A3]/50 focus:border-[#F8E7C9] focus:ring-1 focus:ring-[#F8E7C9]/40 outline-none transition"
-              />
+        {/* 2-Column Creative Grid */}
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 items-start">
+          
+          {/* Left Column — Interactive Cards & Quick Copy */}
+          <motion.div
+            className="lg:col-span-5 space-y-6"
+            initial={{ opacity: 0, x: -20 }}
+            animate={{ opacity: 1, x: 0 }}
+            transition={{ duration: 0.5, delay: 0.15 }}
+          >
+            {/* Quick Email Copy Card */}
+            <div className="p-6 bg-gradient-to-br from-[#064E3B]/60 via-[#043327] to-[#022C22] border border-[#F8E7C9]/30 rounded-3xl backdrop-blur-xl shadow-xl space-y-4">
+              <div className="flex items-center justify-between">
+                <div className="w-10 h-10 rounded-xl bg-[#064E3B] border border-[#F8E7C9]/30 flex items-center justify-center text-[#F8E7C9]">
+                  <Mail className="w-5 h-5 text-[#F8E7C9]" />
+                </div>
+                <span className="text-[10px] uppercase font-mono font-bold text-[#34D399] bg-[#10B981]/15 px-2.5 py-1 rounded-full border border-[#10B981]/30">
+                  Primary Mail
+                </span>
+              </div>
+              <div>
+                <p className="text-xs text-[#D4C3A3]/70 font-mono">Direct Email Address</p>
+                <p className="text-sm sm:text-base font-bold text-[#FAF4E8] mt-0.5 break-all">
+                  bishtyogendra96436372@gmail.com
+                </p>
+              </div>
+              <button
+                onClick={copyEmail}
+                className="w-full py-2.5 px-4 rounded-xl bg-[#022C22] border border-[#F8E7C9]/25 hover:border-[#F8E7C9] text-xs font-semibold text-[#F8E7C9] transition duration-300 flex items-center justify-center gap-2 shadow-sm"
+              >
+                {copiedEmail ? (
+                  <>
+                    <Check className="w-4 h-4 text-[#34D399]" />
+                    <span className="text-[#34D399]">Copied to Clipboard!</span>
+                  </>
+                ) : (
+                  <>
+                    <Copy className="w-4 h-4 text-[#F8E7C9]" />
+                    <span>Copy Email Address</span>
+                  </>
+                )}
+              </button>
             </div>
-            <div>
-              <label htmlFor="email" className="block text-xs font-bold uppercase tracking-wider text-[#F8E7C9] mb-2">
-                Email Address
-              </label>
-              <input
-                type="email"
-                name="email"
-                id="email"
-                required
-                placeholder="you@example.com"
-                className="block w-full rounded-xl border border-[#F8E7C9]/20 bg-[#064E3B]/30 px-4 py-3 text-sm text-[#FAF4E8] placeholder-[#D4C3A3]/50 focus:border-[#F8E7C9] focus:ring-1 focus:ring-[#F8E7C9]/40 outline-none transition"
-              />
+
+            {/* Location & Timezone Card */}
+            <div className="p-6 bg-[#022C22]/85 border border-[#F8E7C9]/20 rounded-3xl backdrop-blur-xl shadow-xl space-y-4">
+              <div className="flex items-center justify-between">
+                <div className="flex items-center gap-2 text-xs font-bold text-[#FAF4E8]">
+                  <MapPin className="w-4 h-4 text-[#F8E7C9]" />
+                  <span>Uttarakhand, India</span>
+                </div>
+                <div className="flex items-center gap-1.5 text-xs text-[#F8E7C9] font-mono bg-[#064E3B]/50 px-3 py-1 rounded-full border border-[#F8E7C9]/20">
+                  <Clock className="w-3.5 h-3.5 text-[#34D399]" />
+                  <span>{currentTime || "UTC +5:30"}</span>
+                </div>
+              </div>
+              <p className="text-xs text-[#D4C3A3]/80 leading-relaxed">
+                Open for remote roles globally as well as on-site positions in India. Flexible with international work shifts.
+              </p>
             </div>
-            <div>
-              <label htmlFor="message" className="block text-xs font-bold uppercase tracking-wider text-[#F8E7C9] mb-2">
-                Your Message
-              </label>
-              <textarea
-                name="message"
-                id="message"
-                rows="5"
-                required
-                placeholder="Tell me about your project, timeline, or inquiry..."
-                className="block w-full rounded-xl border border-[#F8E7C9]/20 bg-[#064E3B]/30 px-4 py-3 text-sm text-[#FAF4E8] placeholder-[#D4C3A3]/50 focus:border-[#F8E7C9] focus:ring-1 focus:ring-[#F8E7C9]/40 outline-none transition resize-none"
-              />
+
+            {/* Direct Social Grid */}
+            <div className="p-6 bg-[#022C22]/85 border border-[#F8E7C9]/20 rounded-3xl backdrop-blur-xl shadow-xl space-y-3">
+              <span className="text-xs font-bold uppercase tracking-wider text-[#F8E7C9] block mb-1">
+                Direct Profiles
+              </span>
+              <div className="grid grid-cols-3 gap-3">
+                <a
+                  href="https://linkedin.com/in/yogendra-bisht-7b4b63288"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="flex flex-col items-center justify-center p-3 rounded-2xl bg-[#064E3B]/40 border border-[#F8E7C9]/20 hover:border-[#F8E7C9] hover:bg-[#064E3B] transition duration-300 group shadow"
+                >
+                  <LinkedinIcon className="w-5 h-5 text-[#F8E7C9] group-hover:scale-110 transition duration-300 mb-1" />
+                  <span className="text-[11px] font-semibold text-[#FAF4E8]">LinkedIn</span>
+                </a>
+                <a
+                  href="https://github.com/Yogendra-Bisht"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="flex flex-col items-center justify-center p-3 rounded-2xl bg-[#064E3B]/40 border border-[#F8E7C9]/20 hover:border-[#F8E7C9] hover:bg-[#064E3B] transition duration-300 group shadow"
+                >
+                  <GithubIcon className="w-5 h-5 text-[#F8E7C9] group-hover:scale-110 transition duration-300 mb-1" />
+                  <span className="text-[11px] font-semibold text-[#FAF4E8]">GitHub</span>
+                </a>
+                <a
+                  href="https://www.instagram.com/_yogibisht_?igsh=MXdrN29mZHV0dTJ4eQ=="
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="flex flex-col items-center justify-center p-3 rounded-2xl bg-[#064E3B]/40 border border-[#F8E7C9]/20 hover:border-[#F8E7C9] hover:bg-[#064E3B] transition duration-300 group shadow"
+                >
+                  <InstagramIcon className="w-5 h-5 text-[#F8E7C9] group-hover:scale-110 transition duration-300 mb-1" />
+                  <span className="text-[11px] font-semibold text-[#FAF4E8]">Instagram</span>
+                </a>
+              </div>
             </div>
-          </div>
+          </motion.div>
 
-          <div className="mt-8">
-            <button
-              type="submit"
-              disabled={isSubmitting}
-              className={`w-full rounded-full py-3.5 px-6 text-sm font-bold text-[#022C22] bg-[#F8E7C9] hover:bg-[#FAF4E8] transition duration-300 shadow-lg flex items-center justify-center gap-2 ${
-                isSubmitting ? "opacity-60 cursor-not-allowed" : "hover:scale-[1.01]"
-              }`}
-            >
-              {isSubmitting ? (
-                <span>Sending Message...</span>
-              ) : (
-                <>
-                  <Send className="w-4 h-4 text-[#022C22]" /> Send Message
-                </>
-              )}
-            </button>
-          </div>
+          {/* Right Column — Interactive Message Console */}
+          <motion.div
+            className="lg:col-span-7"
+            initial={{ opacity: 0, x: 20 }}
+            animate={{ opacity: 1, x: 0 }}
+            transition={{ duration: 0.5, delay: 0.2 }}
+          >
+            <div className="bg-[#022C22]/90 backdrop-blur-2xl border border-[#F8E7C9]/30 rounded-3xl p-6 sm:p-8 shadow-2xl space-y-6">
+              
+              {/* Form Console Header */}
+              <div className="flex items-center justify-between border-b border-[#F8E7C9]/15 pb-4">
+                <div className="flex items-center gap-2">
+                  <Terminal className="w-4 h-4 text-[#F8E7C9]" />
+                  <span className="text-xs font-mono font-bold text-[#F8E7C9]">dispatch-message.sh</span>
+                </div>
+                <span className="text-[11px] text-[#34D399] font-mono flex items-center gap-1">
+                  <Zap className="w-3 h-3" /> Web3Forms API Active
+                </span>
+              </div>
 
-          {result && (
-            <div className={`mt-4 text-center text-xs font-semibold p-3 rounded-xl border ${
-              result.includes("Success")
-                ? "bg-[#10B981]/15 text-[#34D399] border-[#10B981]/30"
-                : "bg-red-500/15 text-red-300 border-red-500/30"
-            }`}>
-              {result}
+              {/* Quick Preset Selector Buttons */}
+              <div>
+                <span className="block text-xs font-bold uppercase tracking-wider text-[#F8E7C9] mb-2.5">
+                  Select Quick Inquiry Topic:
+                </span>
+                <div className="flex flex-wrap gap-2">
+                  {INQUIRY_TOPICS.map((topic) => (
+                    <button
+                      key={topic.label}
+                      type="button"
+                      onClick={() => handleTopicClick(topic)}
+                      className={`px-3 py-1.5 rounded-full text-xs font-semibold transition-all duration-300 border ${
+                        selectedTopic === topic.label
+                          ? "bg-[#F8E7C9] text-[#022C22] border-[#F8E7C9] shadow-md scale-105"
+                          : "bg-[#064E3B]/40 text-[#D4C3A3] border-[#F8E7C9]/20 hover:border-[#F8E7C9]/50 hover:text-[#FAF4E8]"
+                      }`}
+                    >
+                      {topic.label}
+                    </button>
+                  ))}
+                </div>
+              </div>
+
+              {/* Contact Form */}
+              <form onSubmit={onSubmit} className="space-y-5">
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                  <div>
+                    <label htmlFor="name" className="block text-xs font-bold uppercase tracking-wider text-[#F8E7C9] mb-1.5">
+                      Your Name *
+                    </label>
+                    <input
+                      type="text"
+                      name="name"
+                      id="name"
+                      required
+                      placeholder="e.g. Alex Johnson"
+                      className="block w-full rounded-xl border border-[#F8E7C9]/20 bg-[#041C16] px-4 py-3 text-sm text-[#FAF4E8] placeholder-[#D4C3A3]/40 focus:border-[#F8E7C9] focus:ring-1 focus:ring-[#F8E7C9]/40 outline-none transition"
+                    />
+                  </div>
+
+                  <div>
+                    <label htmlFor="email" className="block text-xs font-bold uppercase tracking-wider text-[#F8E7C9] mb-1.5">
+                      Email Address *
+                    </label>
+                    <input
+                      type="email"
+                      name="email"
+                      id="email"
+                      required
+                      placeholder="you@company.com"
+                      className="block w-full rounded-xl border border-[#F8E7C9]/20 bg-[#041C16] px-4 py-3 text-sm text-[#FAF4E8] placeholder-[#D4C3A3]/40 focus:border-[#F8E7C9] focus:ring-1 focus:ring-[#F8E7C9]/40 outline-none transition"
+                    />
+                  </div>
+                </div>
+
+                <div>
+                  <label htmlFor="message" className="block text-xs font-bold uppercase tracking-wider text-[#F8E7C9] mb-1.5">
+                    Your Message *
+                  </label>
+                  <textarea
+                    name="message"
+                    id="message"
+                    rows="5"
+                    required
+                    value={messageContent}
+                    onChange={(e) => setMessageContent(e.target.value)}
+                    placeholder="Describe your project, position details, or technical requirement..."
+                    className="block w-full rounded-xl border border-[#F8E7C9]/20 bg-[#041C16] px-4 py-3 text-sm text-[#FAF4E8] placeholder-[#D4C3A3]/40 focus:border-[#F8E7C9] focus:ring-1 focus:ring-[#F8E7C9]/40 outline-none transition resize-none leading-relaxed"
+                  />
+                </div>
+
+                <button
+                  type="submit"
+                  disabled={isSubmitting}
+                  className={`w-full rounded-full py-4 px-6 text-sm font-extrabold text-[#022C22] bg-[#F8E7C9] hover:bg-[#FAF4E8] transition duration-300 shadow-xl flex items-center justify-center gap-2 ${
+                    isSubmitting ? "opacity-60 cursor-not-allowed" : "hover:scale-[1.01]"
+                  }`}
+                >
+                  {isSubmitting ? (
+                    <span className="flex items-center gap-2">
+                      <span className="w-4 h-4 border-2 border-[#022C22] border-t-transparent rounded-full animate-spin" />
+                      Dispatching Message...
+                    </span>
+                  ) : (
+                    <>
+                      <Send className="w-4.5 h-4.5 text-[#022C22]" /> Dispatch Direct Message
+                    </>
+                  )}
+                </button>
+
+                {result && (
+                  <motion.div
+                    initial={{ opacity: 0, y: 10 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    className={`text-center text-xs font-semibold p-3.5 rounded-xl border ${
+                      result.includes("Success")
+                        ? "bg-[#10B981]/15 text-[#34D399] border-[#10B981]/30"
+                        : "bg-red-500/15 text-red-300 border-red-500/30"
+                    }`}
+                  >
+                    {result}
+                  </motion.div>
+                )}
+              </form>
             </div>
-          )}
-        </form>
+          </motion.div>
 
-        {/* Social Connect Options */}
-        <div className="text-center">
-          <div className="relative flex py-4 items-center">
-            <div className="grow border-t border-[#F8E7C9]/15"></div>
-            <span className="shrink-0 mx-4 text-[#D4C3A3]/70 text-xs font-medium uppercase tracking-wider">
-              Or Connect Directly
-            </span>
-            <div className="grow border-t border-[#F8E7C9]/15"></div>
-          </div>
-
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mt-4">
-            <SocialButton
-              href="https://linkedin.com/in/yogendra-bisht-7b4b63288"
-              icon={<LinkedinIcon className="w-5 h-5 text-[#F8E7C9]" />}
-              label="LinkedIn"
-            />
-            <SocialButton
-              href="https://github.com/Yogendra-Bisht"
-              icon={<GithubIcon className="w-5 h-5 text-[#F8E7C9]" />}
-              label="GitHub"
-            />
-            <SocialButton
-              href="https://www.instagram.com/_yogibisht_?igsh=MXdrN29mZHV0dTJ4eQ=="
-              icon={<InstagramIcon className="w-5 h-5 text-[#F8E7C9]" />}
-              label="Instagram"
-            />
-            <SocialButton
-              href="mailto:bishtyogendra96436372@gmail.com"
-              icon={<Mail className="w-5 h-5 text-[#F8E7C9]" />}
-              label="Email"
-            />
-          </div>
         </div>
 
       </div>
     </div>
   );
 }
-
-function SocialButton({ href, icon, label }) {
-  return (
-    <a
-      href={href}
-      target="_blank"
-      rel="noopener noreferrer"
-      className="flex flex-col items-center justify-center p-4 bg-[#022C22]/80 border border-[#F8E7C9]/20 rounded-2xl hover:border-[#F8E7C9] hover:bg-[#064E3B]/60 transition duration-300 group shadow-md"
-    >
-      <div className="group-hover:scale-110 transition duration-300 mb-2">
-        {icon}
-      </div>
-      <span className="text-xs font-medium text-[#FAF4E8]">
-        {label}
-      </span>
-    </a>
-  );
-}
-
