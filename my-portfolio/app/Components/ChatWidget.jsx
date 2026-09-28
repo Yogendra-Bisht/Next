@@ -1,19 +1,42 @@
 "use client";
 import { useState, useRef, useEffect } from "react";
-import { Bot, User, Send, RefreshCw, X, Sparkles, MessageSquare } from "lucide-react";
+import {
+  Bot,
+  User,
+  Send,
+  RefreshCw,
+  X,
+  Sparkles,
+  MessageSquare,
+  Volume2,
+  VolumeX,
+  Download,
+  Briefcase,
+  Code2,
+  Rocket,
+  Copy,
+  Check
+} from "lucide-react";
 
 const INITIAL_GREETING = {
   role: "assistant",
   content:
-    "Greetings! 👋 I'm **Yogendra's AI Assistant** powered by Groq. Ask me anything about his full-stack skills, Next.js projects, GitHub certifications, or availability!",
+    "Greetings! 👋 I'm **Yogendra's AI Assistant v2.5** powered by Groq LLaMA 3.1. Ask me anything about his DevOps & Cloud specializations (Linux, Docker, AWS), Next.js 16 projects (WordCatch, SRAP, Cosmos Dashboard), GitHub certification (GH-900), or job availability!",
 };
 
+const MODE_PRESETS = [
+  { id: "all", label: "General Q&A", icon: Sparkles },
+  { id: "recruiter", label: "💼 Recruiter View", icon: Briefcase, prompt: "Give me a 3-bullet executive summary of Yogendra's experience, degree, and job availability." },
+  { id: "tech", label: "💻 DevOps & Tech Stack", icon: Code2, prompt: "Explain Yogendra's DevOps stack (Linux, Docker, AWS, CI/CD) and backend skills." },
+  { id: "projects", label: "🚀 Flagship Projects", icon: Rocket, prompt: "What are Yogendra's top projects? Detail WordCatch (Manifest V3 extension) and SRAP." },
+];
+
 const QUICK_TOPICS = [
-  { label: "⚡ Key Skills", prompt: "What are Yogendra's key technical skills?" },
-  { label: "📁 Projects", prompt: "Show me Yogendra's top projects and live demos." },
-  { label: "📜 Certifications", prompt: "Tell me about his GitHub certification." },
-  { label: "✉️ Contact", prompt: "How can I contact Yogendra?" },
-  { label: "💼 Availability", prompt: "Is Yogendra open for work or internships?" },
+  { label: "⚡ DevOps & Skills", prompt: "What are Yogendra's key DevOps, Cloud, and Software engineering skills?" },
+  { label: "🚀 Pinned Projects", prompt: "Tell me about Yogendra's flagship projects like WordCatch and SRAP." },
+  { label: "📜 Certifications", prompt: "Tell me about his GitHub Foundations GH-900 certification." },
+  { label: "✉️ Contact Info", prompt: "How can I contact Yogendra?" },
+  { label: "💼 Job Availability", prompt: "Is Yogendra actively open for full-time engineering & DevOps roles?" },
 ];
 
 export default function ChatWidget() {
@@ -23,6 +46,8 @@ export default function ChatWidget() {
   const [isStreaming, setIsStreaming] = useState(false);
   const [hasUnread, setHasUnread] = useState(true);
   const [copiedIndex, setCopiedIndex] = useState(null);
+  const [speakingIndex, setSpeakingIndex] = useState(null);
+  const [activeMode, setActiveMode] = useState("all");
 
   const messagesEndRef = useRef(null);
   const inputRef = useRef(null);
@@ -59,6 +84,7 @@ export default function ChatWidget() {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           messages: updatedMessages.map(({ role, content }) => ({ role, content })),
+          mode: activeMode,
         }),
       });
 
@@ -105,6 +131,13 @@ export default function ChatWidget() {
     }
   };
 
+  const handleModeSwitch = (mode) => {
+    setActiveMode(mode.id);
+    if (mode.prompt) {
+      sendMessage(mode.prompt);
+    }
+  };
+
   const handleKeyDown = (e) => {
     if (e.key === "Enter" && !e.shiftKey) {
       e.preventDefault();
@@ -113,6 +146,8 @@ export default function ChatWidget() {
   };
 
   const handleClearChat = () => {
+    window.speechSynthesis?.cancel();
+    setSpeakingIndex(null);
     setMessages([INITIAL_GREETING]);
   };
 
@@ -122,17 +157,49 @@ export default function ChatWidget() {
     setTimeout(() => setCopiedIndex(null), 2000);
   };
 
+  const toggleTextToSpeech = (text, index) => {
+    if (!("speechSynthesis" in window)) return;
+
+    if (speakingIndex === index) {
+      window.speechSynthesis.cancel();
+      setSpeakingIndex(null);
+    } else {
+      window.speechSynthesis.cancel();
+      const cleanText = text.replace(/[*#_\[\]()]/g, ""); // Strip markdown characters
+      const utterance = new SpeechSynthesisUtterance(cleanText);
+      utterance.rate = 1.0;
+      utterance.pitch = 1.0;
+      utterance.onend = () => setSpeakingIndex(null);
+      utterance.onerror = () => setSpeakingIndex(null);
+      window.speechSynthesis.speak(utterance);
+      setSpeakingIndex(index);
+    }
+  };
+
+  const exportChatLog = () => {
+    const chatLogText = messages
+      .map((m) => `[${m.role.toUpperCase()}]: ${m.content}`)
+      .join("\n\n---\n\n");
+    const blob = new Blob([chatLogText], { type: "text/markdown" });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = "Yogendra_AI_Chat_Transcript.md";
+    a.click();
+    URL.revokeObjectURL(url);
+  };
+
   return (
     <>
       {/* === CHAT WINDOW === */}
       <div
         className={`
           fixed bottom-24 right-4 sm:right-6 z-50
-          w-[calc(100vw-2rem)] sm:w-[410px]
+          w-[calc(100vw-2rem)] sm:w-[420px]
           flex flex-col
-          bg-[#022C22]/95 backdrop-blur-xl
-          border border-[#F8E7C9]/25 hover:border-[#F8E7C9]/50
-          rounded-3xl shadow-2xl shadow-black/80
+          bg-[#022C22]/95 backdrop-blur-2xl
+          border border-[#F8E7C9]/30 hover:border-[#F8E7C9]/60
+          rounded-3xl shadow-2xl shadow-black/90
           overflow-hidden
           transition-all duration-300 ease-out
           ${
@@ -141,35 +208,46 @@ export default function ChatWidget() {
               : "opacity-0 scale-90 translate-y-6 pointer-events-none"
           }
         `}
-        style={{ maxHeight: "78vh", height: "540px" }}
-        aria-label="AI Chat Assistant"
+        style={{ maxHeight: "80vh", height: "570px" }}
+        aria-label="Advanced AI Chat Assistant"
         role="dialog"
       >
         {/* Header */}
-        <div className="flex items-center justify-between px-4 py-3.5 bg-[#064E3B]/80 border-b border-[#F8E7C9]/15 shrink-0">
+        <div className="flex items-center justify-between px-4 py-3 bg-[#064E3B]/90 border-b border-[#F8E7C9]/20 shrink-0">
           <div className="flex items-center gap-3">
             <div className="relative flex items-center justify-center">
               <span className="absolute inset-0 rounded-full bg-[#10B981]/30 animate-ping" />
-              <div className="relative w-9 h-9 rounded-full bg-[#064E3B] border border-[#F8E7C9]/40 flex items-center justify-center text-lg shadow-md">
+              <div className="relative w-8 h-8 rounded-full bg-[#064E3B] border border-[#F8E7C9]/40 flex items-center justify-center text-lg shadow-md">
                 <Sparkles className="w-4 h-4 text-[#F8E7C9]" />
               </div>
-              <span className="absolute bottom-0 right-0 w-2.5 h-2.5 bg-[#10B981] rounded-full border-2 border-[#022C22]" />
+              <span className="absolute bottom-0 right-0 w-2.5 h-2.5 bg-[#34D399] rounded-full border-2 border-[#022C22]" />
             </div>
             <div>
               <div className="flex items-center gap-2">
                 <p className="text-sm font-bold text-[#FAF4E8] leading-tight">Yogendra&apos;s AI</p>
-                <span className="px-1.5 py-0.5 text-[10px] font-semibold bg-[#F8E7C9]/15 text-[#F8E7C9] border border-[#F8E7C9]/30 rounded-md">
-                  v2.0
+                <span className="px-1.5 py-0.5 text-[9px] font-mono font-bold bg-[#F8E7C9]/20 text-[#F8E7C9] border border-[#F8E7C9]/30 rounded">
+                  v2.5 Pro
                 </span>
               </div>
-              <p className="text-xs text-[#34D399] leading-tight mt-0.5 flex items-center gap-1">
+              <p className="text-[11px] text-[#34D399] leading-tight mt-0.5 flex items-center gap-1">
                 <span className="w-1.5 h-1.5 rounded-full bg-[#34D399] inline-block" />
-                Online • Powered by Groq
+                Online • Groq LLaMA 3.1
               </p>
             </div>
           </div>
 
           <div className="flex items-center gap-1">
+            {/* Export Chat Log */}
+            {messages.length > 1 && (
+              <button
+                onClick={exportChatLog}
+                title="Export Conversation Log (.md)"
+                className="p-1.5 text-[#D4C3A3] hover:text-[#F8E7C9] hover:bg-[#064E3B] rounded-lg transition"
+              >
+                <Download className="w-3.5 h-3.5" />
+              </button>
+            )}
+
             {/* Clear Chat Button */}
             {messages.length > 1 && (
               <button
@@ -178,19 +256,44 @@ export default function ChatWidget() {
                 className="p-1.5 text-[#D4C3A3] hover:text-[#F8E7C9] hover:bg-[#064E3B] rounded-lg transition"
                 aria-label="Clear chat"
               >
-                <RefreshCw className="w-4 h-4" />
+                <RefreshCw className="w-3.5 h-3.5" />
               </button>
             )}
 
             {/* Close Button */}
             <button
-              onClick={() => setIsOpen(false)}
+              onClick={() => {
+                window.speechSynthesis?.cancel();
+                setSpeakingIndex(null);
+                setIsOpen(false);
+              }}
               className="p-1.5 text-[#D4C3A3] hover:text-[#FAF4E8] hover:bg-[#064E3B] rounded-lg transition"
               aria-label="Close chat"
             >
               <X className="w-4 h-4" />
             </button>
           </div>
+        </div>
+
+        {/* Mode Switcher Bar */}
+        <div className="px-3 py-1.5 bg-[#041C16] border-b border-[#F8E7C9]/15 flex items-center justify-between gap-1 overflow-x-auto shrink-0 scrollbar-none no-scrollbar">
+          {MODE_PRESETS.map((mode) => {
+            const Icon = mode.icon;
+            return (
+              <button
+                key={mode.id}
+                onClick={() => handleModeSwitch(mode)}
+                className={`text-[11px] px-2.5 py-1 rounded-full font-medium transition shrink-0 flex items-center gap-1 border ${
+                  activeMode === mode.id
+                    ? "bg-[#064E3B] text-[#F8E7C9] border-[#F8E7C9]/40 font-bold shadow"
+                    : "text-[#D4C3A3]/70 border-transparent hover:text-[#FAF4E8] hover:bg-[#064E3B]/30"
+                }`}
+              >
+                <Icon className="w-3 h-3 text-[#F8E7C9]" />
+                {mode.label}
+              </button>
+            );
+          })}
         </div>
 
         {/* Messages Area */}
@@ -202,6 +305,8 @@ export default function ChatWidget() {
               index={i}
               onCopy={handleCopy}
               isCopied={copiedIndex === i}
+              onSpeak={toggleTextToSpeech}
+              isSpeaking={speakingIndex === i}
             />
           ))}
 
@@ -214,14 +319,14 @@ export default function ChatWidget() {
         </div>
 
         {/* Quick Topic Chips */}
-        <div className="px-3 py-2 bg-[#022C22]/80 border-t border-[#F8E7C9]/10 shrink-0">
+        <div className="px-3 py-2 bg-[#022C22]/90 border-t border-[#F8E7C9]/10 shrink-0">
           <div className="flex items-center gap-1.5 overflow-x-auto pb-1 scrollbar-none no-scrollbar">
             {QUICK_TOPICS.map((topic) => (
               <button
                 key={topic.label}
                 disabled={isStreaming}
                 onClick={() => sendMessage(topic.prompt)}
-                className="shrink-0 text-xs px-2.5 py-1 rounded-full bg-[#064E3B]/40 border border-[#F8E7C9]/20 text-[#F8E7C9] hover:border-[#F8E7C9] hover:bg-[#F8E7C9] hover:text-[#022C22] transition disabled:opacity-50"
+                className="shrink-0 text-[11px] px-2.5 py-1 rounded-full bg-[#064E3B]/40 border border-[#F8E7C9]/20 text-[#F8E7C9] hover:border-[#F8E7C9] hover:bg-[#F8E7C9] hover:text-[#022C22] transition disabled:opacity-50"
               >
                 {topic.label}
               </button>
@@ -242,7 +347,7 @@ export default function ChatWidget() {
                 e.target.style.height = `${Math.min(e.target.scrollHeight, 96)}px`;
               }}
               onKeyDown={handleKeyDown}
-              placeholder="Ask about skills, projects, resume..."
+              placeholder="Ask about DevOps, Docker, AWS, Next.js, projects..."
               disabled={isStreaming}
               className="flex-1 bg-transparent text-sm text-[#FAF4E8] placeholder-[#D4C3A3]/50 resize-none outline-none leading-5 max-h-24 disabled:opacity-50"
               style={{ height: "20px" }}
@@ -260,8 +365,8 @@ export default function ChatWidget() {
               )}
             </button>
           </div>
-          <p className="text-center text-[11px] text-[#D4C3A3]/60 mt-2">
-            Powered by <span className="text-[#F8E7C9] font-medium">Groq</span> • LLaMA 3.1 ⚡
+          <p className="text-center text-[11px] text-[#D4C3A3]/60 mt-1.5">
+            Powered by <span className="text-[#F8E7C9] font-medium">Groq LLaMA 3.1</span> • Real-time AI ⚡
           </p>
         </div>
       </div>
@@ -270,7 +375,7 @@ export default function ChatWidget() {
       <div className="fixed bottom-4 sm:bottom-6 right-4 sm:right-6 z-50 group">
         {!isOpen && (
           <div className="absolute right-16 top-1/2 -translate-y-1/2 opacity-0 group-hover:opacity-100 transition-opacity duration-200 pointer-events-none whitespace-nowrap bg-[#022C22] text-[#F8E7C9] text-xs font-semibold px-3 py-1.5 rounded-xl border border-[#F8E7C9]/30 shadow-lg">
-            Chat with AI ✨
+            Chat with AI Assistant ✨
           </div>
         )}
 
@@ -307,7 +412,7 @@ export default function ChatWidget() {
 
 // ─── Sub-components ─────────────────────────────────────────────────────────
 
-function MessageBubble({ message, index, onCopy, isCopied }) {
+function MessageBubble({ message, index, onCopy, isCopied, onSpeak, isSpeaking }) {
   const isUser = message.role === "user";
 
   return (
@@ -322,39 +427,49 @@ function MessageBubble({ message, index, onCopy, isCopied }) {
       </div>
 
       {/* Bubble Content */}
-      <div className="relative max-w-[82%]">
+      <div className="relative max-w-[84%]">
         <div
           className={`
             px-3.5 py-2.5 rounded-2xl text-sm leading-relaxed
             ${
               isUser
                 ? "bg-[#064E3B] text-[#FAF4E8] border border-[#F8E7C9]/20 rounded-br-xs shadow-md"
-                : "bg-[#022C22]/90 text-[#F8E7C9]/90 border border-[#F8E7C9]/10 rounded-bl-xs shadow-md"
+                : "bg-[#022C22]/90 text-[#F8E7C9]/90 border border-[#F8E7C9]/15 rounded-bl-xs shadow-md"
             }
           `}
         >
           {message.content ? (
             <FormattedText text={message.content} />
           ) : (
-            <span className="text-[#F8E7C9]/50 italic text-xs">Thinking…</span>
+            <span className="text-[#F8E7C9]/50 italic text-xs">Processing prompt…</span>
           )}
         </div>
 
-        {/* Copy Button for Assistant */}
+        {/* Action Controls for Assistant Bubble */}
         {!isUser && message.content && (
-          <button
-            onClick={() => onCopy(message.content, index)}
-            title="Copy message"
-            className="absolute -right-7 top-1 opacity-0 group-hover/bubble:opacity-100 p-1 text-[#F8E7C9]/40 hover:text-[#F8E7C9] transition"
-          >
-            {isCopied ? (
-              <span className="text-[10px] text-[#34D399] font-medium">Copied!</span>
-            ) : (
-              <svg className="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-                <path strokeLinecap="round" strokeLinejoin="round" d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z" />
-              </svg>
-            )}
-          </button>
+          <div className="absolute -right-14 top-1 opacity-0 group-hover/bubble:opacity-100 flex items-center gap-1 transition">
+            {/* Copy Button */}
+            <button
+              onClick={() => onCopy(message.content, index)}
+              title="Copy message"
+              className="p-1 text-[#F8E7C9]/50 hover:text-[#F8E7C9] transition"
+            >
+              {isCopied ? (
+                <span className="text-[10px] text-[#34D399] font-medium">Copied!</span>
+              ) : (
+                <Copy className="w-3.5 h-3.5" />
+              )}
+            </button>
+
+            {/* Read Aloud Button */}
+            <button
+              onClick={() => onSpeak(message.content, index)}
+              title={isSpeaking ? "Stop listening" : "Read message aloud"}
+              className={`p-1 transition ${isSpeaking ? "text-[#34D399]" : "text-[#F8E7C9]/50 hover:text-[#F8E7C9]"}`}
+            >
+              {isSpeaking ? <VolumeX className="w-3.5 h-3.5 animate-pulse text-[#34D399]" /> : <Volume2 className="w-3.5 h-3.5" />}
+            </button>
+          </div>
         )}
       </div>
     </div>
@@ -380,14 +495,12 @@ function TypingIndicator() {
   );
 }
 
-// Lightweight Markdown Formatter (Bold, Links, Bullet lists, Inline Code)
+// Lightweight Markdown Formatter (Bold, Links, Bullet lists)
 function FormattedText({ text }) {
-  // Replace links [label](url)
   const renderFormattedLine = (line, lineIdx) => {
     const parts = [];
     let lastIndex = 0;
 
-    // Regex for markdown links [text](url) and bold **text**
     const combinedRegex = /\[([^\]]+)\]\(([^)]+)\)|\*\*([^*]+)\*\*/g;
     let match;
 
@@ -397,22 +510,20 @@ function FormattedText({ text }) {
       }
 
       if (match[1] && match[2]) {
-        // Link match
         parts.push(
           <a
             key={`${lineIdx}-${match.index}`}
             href={match[2]}
             target="_blank"
             rel="noopener noreferrer"
-            className="text-cyan-400 underline underline-offset-2 hover:text-cyan-300 font-medium transition"
+            className="text-[#34D399] underline underline-offset-2 hover:text-[#F8E7C9] font-semibold transition"
           >
             {match[1]}
           </a>
         );
       } else if (match[3]) {
-        // Bold match
         parts.push(
-          <strong key={`${lineIdx}-${match.index}`} className="font-semibold text-white">
+          <strong key={`${lineIdx}-${match.index}`} className="font-semibold text-[#FAF4E8]">
             {match[3]}
           </strong>
         );
@@ -438,7 +549,7 @@ function FormattedText({ text }) {
           const bulletContent = trimmed.slice(2);
           return (
             <div key={i} className="flex items-start gap-1.5 ml-1">
-              <span className="text-cyan-400 text-xs mt-1">•</span>
+              <span className="text-[#34D399] text-xs mt-1">•</span>
               <span>{renderFormattedLine(bulletContent, i)}</span>
             </div>
           );
