@@ -231,7 +231,7 @@ export default function ChatWidget() {
               </div>
               <p className="text-[11px] text-[#34D399] leading-tight mt-0.5 flex items-center gap-1">
                 <span className="w-1.5 h-1.5 rounded-full bg-[#34D399] inline-block" />
-                Online • Groq LLaMA 3.1
+                Online • Groq High-Speed AI
               </p>
             </div>
           </div>
@@ -366,7 +366,7 @@ export default function ChatWidget() {
             </button>
           </div>
           <p className="text-center text-[11px] text-[#D4C3A3]/60 mt-1.5">
-            Powered by <span className="text-[#F8E7C9] font-medium">Groq LLaMA 3.1</span> • Real-time AI ⚡
+            Powered by <span className="text-[#F8E7C9] font-medium">Groq High-Speed AI</span> • Real-time ⚡
           </p>
         </div>
       </div>
