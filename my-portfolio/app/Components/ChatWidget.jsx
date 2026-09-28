@@ -1,13 +1,11 @@
 "use client";
 import { useState, useRef, useEffect } from "react";
-
-const BOT_AVATAR = "🤖";
-const USER_AVATAR = "🧑";
+import { Bot, User, Send, RefreshCw, X, Sparkles, MessageSquare } from "lucide-react";
 
 const INITIAL_GREETING = {
   role: "assistant",
   content:
-    "Hey there! 👋 I'm **Yogendra's AI Assistant** powered by Groq. Ask me anything about his skills, projects, certifications, or background!",
+    "Greetings! 👋 I'm **Yogendra's AI Assistant** powered by Groq. Ask me anything about his full-stack skills, Next.js projects, GitHub certifications, or availability!",
 };
 
 const QUICK_TOPICS = [
@@ -132,9 +130,9 @@ export default function ChatWidget() {
           fixed bottom-24 right-4 sm:right-6 z-50
           w-[calc(100vw-2rem)] sm:w-[410px]
           flex flex-col
-          bg-slate-950/90 backdrop-blur-xl
-          border border-slate-700/80 hover:border-cyan-500/50
-          rounded-3xl shadow-2xl shadow-cyan-500/10
+          bg-[#022C22]/95 backdrop-blur-xl
+          border border-[#F8E7C9]/25 hover:border-[#F8E7C9]/50
+          rounded-3xl shadow-2xl shadow-black/80
           overflow-hidden
           transition-all duration-300 ease-out
           ${
@@ -148,24 +146,24 @@ export default function ChatWidget() {
         role="dialog"
       >
         {/* Header */}
-        <div className="flex items-center justify-between px-4 py-3.5 bg-slate-900/90 border-b border-slate-800/80 shrink-0">
+        <div className="flex items-center justify-between px-4 py-3.5 bg-[#064E3B]/80 border-b border-[#F8E7C9]/15 shrink-0">
           <div className="flex items-center gap-3">
             <div className="relative flex items-center justify-center">
-              <span className="absolute inset-0 rounded-full bg-cyan-500/30 animate-ping" />
-              <div className="relative w-9 h-9 rounded-full bg-gradient-to-tr from-cyan-600 to-blue-600 border border-cyan-400/40 flex items-center justify-center text-lg shadow-md shadow-cyan-500/20">
-                🤖
+              <span className="absolute inset-0 rounded-full bg-[#10B981]/30 animate-ping" />
+              <div className="relative w-9 h-9 rounded-full bg-[#064E3B] border border-[#F8E7C9]/40 flex items-center justify-center text-lg shadow-md">
+                <Sparkles className="w-4 h-4 text-[#F8E7C9]" />
               </div>
-              <span className="absolute bottom-0 right-0 w-2.5 h-2.5 bg-emerald-400 rounded-full border-2 border-slate-950" />
+              <span className="absolute bottom-0 right-0 w-2.5 h-2.5 bg-[#10B981] rounded-full border-2 border-[#022C22]" />
             </div>
             <div>
               <div className="flex items-center gap-2">
-                <p className="text-sm font-bold text-white leading-tight">Yogendra&apos;s AI</p>
-                <span className="px-1.5 py-0.5 text-[10px] font-semibold bg-cyan-500/10 text-cyan-400 border border-cyan-500/20 rounded-md">
+                <p className="text-sm font-bold text-[#FAF4E8] leading-tight">Yogendra&apos;s AI</p>
+                <span className="px-1.5 py-0.5 text-[10px] font-semibold bg-[#F8E7C9]/15 text-[#F8E7C9] border border-[#F8E7C9]/30 rounded-md">
                   v2.0
                 </span>
               </div>
-              <p className="text-xs text-emerald-400 leading-tight mt-0.5 flex items-center gap-1">
-                <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 inline-block" />
+              <p className="text-xs text-[#34D399] leading-tight mt-0.5 flex items-center gap-1">
+                <span className="w-1.5 h-1.5 rounded-full bg-[#34D399] inline-block" />
                 Online • Powered by Groq
               </p>
             </div>
@@ -177,24 +175,20 @@ export default function ChatWidget() {
               <button
                 onClick={handleClearChat}
                 title="Reset conversation"
-                className="p-1.5 text-gray-400 hover:text-cyan-400 hover:bg-slate-800 rounded-lg transition"
+                className="p-1.5 text-[#D4C3A3] hover:text-[#F8E7C9] hover:bg-[#064E3B] rounded-lg transition"
                 aria-label="Clear chat"
               >
-                <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-                  <path strokeLinecap="round" strokeLinejoin="round" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
-                </svg>
+                <RefreshCw className="w-4 h-4" />
               </button>
             )}
 
             {/* Close Button */}
             <button
               onClick={() => setIsOpen(false)}
-              className="p-1.5 text-gray-400 hover:text-white hover:bg-slate-800 rounded-lg transition"
+              className="p-1.5 text-[#D4C3A3] hover:text-[#FAF4E8] hover:bg-[#064E3B] rounded-lg transition"
               aria-label="Close chat"
             >
-              <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-                <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
-              </svg>
+              <X className="w-4 h-4" />
             </button>
           </div>
         </div>
@@ -220,14 +214,14 @@ export default function ChatWidget() {
         </div>
 
         {/* Quick Topic Chips */}
-        <div className="px-3 py-2 bg-slate-900/60 border-t border-slate-800/80 shrink-0">
+        <div className="px-3 py-2 bg-[#022C22]/80 border-t border-[#F8E7C9]/10 shrink-0">
           <div className="flex items-center gap-1.5 overflow-x-auto pb-1 scrollbar-none no-scrollbar">
             {QUICK_TOPICS.map((topic) => (
               <button
                 key={topic.label}
                 disabled={isStreaming}
                 onClick={() => sendMessage(topic.prompt)}
-                className="shrink-0 text-xs px-2.5 py-1 rounded-full bg-slate-800/80 border border-slate-700 text-cyan-300 hover:border-cyan-400 hover:bg-cyan-500/10 hover:text-cyan-200 transition disabled:opacity-50"
+                className="shrink-0 text-xs px-2.5 py-1 rounded-full bg-[#064E3B]/40 border border-[#F8E7C9]/20 text-[#F8E7C9] hover:border-[#F8E7C9] hover:bg-[#F8E7C9] hover:text-[#022C22] transition disabled:opacity-50"
               >
                 {topic.label}
               </button>
@@ -236,8 +230,8 @@ export default function ChatWidget() {
         </div>
 
         {/* Input Area */}
-        <div className="px-3 py-3 bg-slate-900 border-t border-slate-800 shrink-0">
-          <div className="flex items-end gap-2 bg-slate-950 border border-slate-700/80 rounded-2xl px-3 py-2 focus-within:border-cyan-500/70 focus-within:ring-1 focus-within:ring-cyan-500/30 transition">
+        <div className="px-3 py-3 bg-[#022C22] border-t border-[#F8E7C9]/15 shrink-0">
+          <div className="flex items-end gap-2 bg-[#064E3B]/30 border border-[#F8E7C9]/20 rounded-2xl px-3 py-2 focus-within:border-[#F8E7C9] focus-within:ring-1 focus-within:ring-[#F8E7C9]/30 transition">
             <textarea
               ref={inputRef}
               rows={1}
@@ -250,38 +244,32 @@ export default function ChatWidget() {
               onKeyDown={handleKeyDown}
               placeholder="Ask about skills, projects, resume..."
               disabled={isStreaming}
-              className="flex-1 bg-transparent text-sm text-white placeholder-gray-500 resize-none outline-none leading-5 max-h-24 disabled:opacity-50"
+              className="flex-1 bg-transparent text-sm text-[#FAF4E8] placeholder-[#D4C3A3]/50 resize-none outline-none leading-5 max-h-24 disabled:opacity-50"
               style={{ height: "20px" }}
             />
             <button
               onClick={() => sendMessage()}
               disabled={isStreaming || !input.trim()}
-              className="shrink-0 mb-0.5 p-2 rounded-xl bg-gradient-to-r from-cyan-600 to-blue-600 hover:from-cyan-500 hover:to-blue-500 disabled:from-slate-800 disabled:to-slate-800 disabled:text-gray-500 text-white shadow-md shadow-cyan-500/20 transition disabled:cursor-not-allowed disabled:shadow-none"
+              className="shrink-0 mb-0.5 p-2 rounded-xl bg-[#F8E7C9] text-[#022C22] hover:bg-[#FAF4E8] disabled:bg-[#064E3B]/40 disabled:text-[#D4C3A3]/40 font-bold shadow-md shadow-[#F8E7C9]/10 transition disabled:cursor-not-allowed disabled:shadow-none"
               aria-label="Send message"
             >
               {isStreaming ? (
-                <svg className="w-4 h-4 animate-spin text-cyan-300" fill="none" viewBox="0 0 24 24">
-                  <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
-                  <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v8H4z" />
-                </svg>
+                <RefreshCw className="w-4 h-4 animate-spin text-[#022C22]" />
               ) : (
-                <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-                  <path strokeLinecap="round" strokeLinejoin="round" d="M6 12L3.269 3.126A59.768 59.768 0 0121.485 12 59.77 59.77 0 013.27 20.876L5.999 12zm0 0h7.5" />
-                </svg>
+                <Send className="w-4 h-4 text-[#022C22]" />
               )}
             </button>
           </div>
-          <p className="text-center text-[11px] text-gray-500 mt-2">
-            Powered by <span className="text-cyan-400 font-medium">Groq</span> • LLaMA 3.1 ⚡
+          <p className="text-center text-[11px] text-[#D4C3A3]/60 mt-2">
+            Powered by <span className="text-[#F8E7C9] font-medium">Groq</span> • LLaMA 3.1 ⚡
           </p>
         </div>
       </div>
 
       {/* === FLOATING ACTION BUTTON === */}
       <div className="fixed bottom-4 sm:bottom-6 right-4 sm:right-6 z-50 group">
-        {/* Tooltip badge on hover */}
         {!isOpen && (
-          <div className="absolute right-16 top-1/2 -translate-y-1/2 opacity-0 group-hover:opacity-100 transition-opacity duration-200 pointer-events-none whitespace-nowrap bg-slate-900 text-cyan-300 text-xs font-semibold px-3 py-1.5 rounded-xl border border-cyan-500/30 shadow-lg">
+          <div className="absolute right-16 top-1/2 -translate-y-1/2 opacity-0 group-hover:opacity-100 transition-opacity duration-200 pointer-events-none whitespace-nowrap bg-[#022C22] text-[#F8E7C9] text-xs font-semibold px-3 py-1.5 rounded-xl border border-[#F8E7C9]/30 shadow-lg">
             Chat with AI ✨
           </div>
         )}
@@ -294,48 +282,23 @@ export default function ChatWidget() {
             transition-all duration-300 transform
             ${
               isOpen
-                ? "bg-slate-800 text-white rotate-0 shadow-slate-950/80 border border-slate-700"
-                : "bg-gradient-to-r from-cyan-600 to-blue-600 text-white hover:scale-110 shadow-cyan-500/40"
+                ? "bg-[#064E3B] text-[#FAF4E8] border border-[#F8E7C9]/40 shadow-black/80"
+                : "bg-[#F8E7C9] text-[#022C22] hover:scale-110 shadow-[#F8E7C9]/25"
             }
           `}
           aria-label={isOpen ? "Close chat" : "Open AI chat assistant"}
         >
-          {/* Glowing ring animation when closed */}
           {!isOpen && (
-            <span className="absolute -inset-1 rounded-full bg-gradient-to-r from-cyan-500 to-blue-500 opacity-40 blur-sm animate-pulse" />
+            <span className="absolute -inset-1 rounded-full bg-[#F8E7C9] opacity-30 blur-sm animate-pulse" />
           )}
 
-          {/* Unread notification badge */}
           {hasUnread && !isOpen && (
-            <span className="absolute -top-1 -right-1 w-4 h-4 bg-emerald-400 rounded-full border-2 border-slate-950 flex items-center justify-center text-[9px] font-bold text-slate-950 shadow">
+            <span className="absolute -top-1 -right-1 w-4 h-4 bg-[#10B981] rounded-full border-2 border-[#022C22] flex items-center justify-center text-[9px] font-bold text-[#022C22] shadow">
               1
             </span>
           )}
 
-          {/* Toggle Icons */}
-          <span
-            className={`absolute transition-all duration-200 ${
-              isOpen ? "opacity-100 rotate-0 scale-100" : "opacity-0 rotate-90 scale-75"
-            }`}
-          >
-            <svg className="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-              <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
-            </svg>
-          </span>
-
-          <span
-            className={`absolute transition-all duration-200 ${
-              !isOpen ? "opacity-100 rotate-0 scale-100" : "opacity-0 -rotate-90 scale-75"
-            }`}
-          >
-            <svg className="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                d="M8 10h.01M12 10h.01M16 10h.01M9 16H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-5l-5 5v-5z"
-              />
-            </svg>
-          </span>
+          {isOpen ? <X className="w-6 h-6 text-[#FAF4E8]" /> : <MessageSquare className="w-6 h-6 text-[#022C22]" />}
         </button>
       </div>
     </>
@@ -352,10 +315,10 @@ function MessageBubble({ message, index, onCopy, isCopied }) {
       {/* Avatar */}
       <div className={`shrink-0 w-7 h-7 rounded-full flex items-center justify-center text-xs shadow-sm border ${
         isUser
-          ? "bg-cyan-900/60 border-cyan-500/40 text-white"
-          : "bg-slate-800 border-slate-700 text-white"
+          ? "bg-[#064E3B] border-[#F8E7C9]/30 text-[#F8E7C9]"
+          : "bg-[#022C22] border-[#34D399]/30 text-[#34D399]"
       }`}>
-        {isUser ? USER_AVATAR : BOT_AVATAR}
+        {isUser ? <User className="w-3.5 h-3.5 text-[#F8E7C9]" /> : <Bot className="w-3.5 h-3.5 text-[#34D399]" />}
       </div>
 
       {/* Bubble Content */}
@@ -365,15 +328,15 @@ function MessageBubble({ message, index, onCopy, isCopied }) {
             px-3.5 py-2.5 rounded-2xl text-sm leading-relaxed
             ${
               isUser
-                ? "bg-gradient-to-r from-cyan-600 to-blue-600 text-white rounded-br-xs shadow-md shadow-cyan-600/10"
-                : "bg-slate-900/90 text-gray-200 border border-slate-800 rounded-bl-xs shadow-md"
+                ? "bg-[#064E3B] text-[#FAF4E8] border border-[#F8E7C9]/20 rounded-br-xs shadow-md"
+                : "bg-[#022C22]/90 text-[#F8E7C9]/90 border border-[#F8E7C9]/10 rounded-bl-xs shadow-md"
             }
           `}
         >
           {message.content ? (
             <FormattedText text={message.content} />
           ) : (
-            <span className="text-gray-400 italic text-xs">Thinking…</span>
+            <span className="text-[#F8E7C9]/50 italic text-xs">Thinking…</span>
           )}
         </div>
 
@@ -382,13 +345,13 @@ function MessageBubble({ message, index, onCopy, isCopied }) {
           <button
             onClick={() => onCopy(message.content, index)}
             title="Copy message"
-            className="absolute -right-7 top-1 opacity-0 group-hover/bubble:opacity-100 p-1 text-gray-500 hover:text-cyan-400 transition"
+            className="absolute -right-7 top-1 opacity-0 group-hover/bubble:opacity-100 p-1 text-[#F8E7C9]/40 hover:text-[#F8E7C9] transition"
           >
             {isCopied ? (
-              <span className="text-[10px] text-emerald-400 font-medium">Copied!</span>
+              <span className="text-[10px] text-[#34D399] font-medium">Copied!</span>
             ) : (
               <svg className="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-                <path strokeLinecap="round" strokeLinejoin="round" d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z" />
+                <path strokeLinecap="round" strokeLinejoin="round" d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z" />
               </svg>
             )}
           </button>
@@ -401,14 +364,14 @@ function MessageBubble({ message, index, onCopy, isCopied }) {
 function TypingIndicator() {
   return (
     <div className="flex items-end gap-2">
-      <div className="shrink-0 w-7 h-7 rounded-full flex items-center justify-center text-xs bg-slate-800 border border-slate-700">
-        {BOT_AVATAR}
+      <div className="shrink-0 w-7 h-7 rounded-full flex items-center justify-center text-xs bg-[#022C22] border border-[#34D399]/30 text-[#34D399]">
+        <Bot className="w-3.5 h-3.5 text-[#34D399]" />
       </div>
-      <div className="bg-slate-900 border border-slate-800 px-4 py-3 rounded-2xl rounded-bl-xs flex items-center gap-1.5">
+      <div className="bg-[#022C22] border border-[#F8E7C9]/10 px-4 py-3 rounded-2xl rounded-bl-xs flex items-center gap-1.5">
         {[0, 1, 2].map((i) => (
           <span
             key={i}
-            className="w-1.5 h-1.5 bg-cyan-400 rounded-full animate-bounce"
+            className="w-1.5 h-1.5 bg-[#34D399] rounded-full animate-bounce"
             style={{ animationDelay: `${i * 0.15}s`, animationDuration: "0.8s" }}
           />
         ))}

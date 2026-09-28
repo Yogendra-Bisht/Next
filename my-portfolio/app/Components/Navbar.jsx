@@ -2,6 +2,7 @@
 import { useState } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
+import { FileText, Menu, X, Sparkles } from "lucide-react";
 
 const NAV_LINKS = [
   { href: "/", label: "Home" },
@@ -17,36 +18,45 @@ export default function Navbar() {
   const pathname = usePathname();
 
   return (
-    <nav className="sticky top-0 z-50 backdrop-blur-md bg-slate-900/80 border-b border-slate-700 text-white">
-      <div className="max-w-6xl mx-auto px-4">
+    <nav className="sticky top-0 z-50 backdrop-blur-xl bg-[#022C22]/85 border-b border-[#F8E7C9]/15 text-[#FAF4E8] transition-all duration-300">
+      <div className="max-w-6xl mx-auto px-4 sm:px-6">
         <div className="flex justify-between items-center h-16">
 
           {/* Logo */}
-          <Link href="/" className="text-xl font-bold tracking-wide hover:text-cyan-400 transition">
-            Yogendra<span className="text-cyan-400">.dev</span>
+          <Link href="/" className="group flex items-center gap-2.5 text-xl font-bold tracking-tight text-[#FAF4E8]">
+            <span className="w-8 h-8 rounded-lg bg-[#064E3B] border border-[#F8E7C9]/30 flex items-center justify-center text-[#F8E7C9] group-hover:border-[#F8E7C9] group-hover:scale-105 transition-all duration-300 shadow-md">
+              <Sparkles className="w-4 h-4 text-[#F8E7C9]" />
+            </span>
+            <span className="tracking-wide">
+              Yogendra<span className="text-[#F8E7C9] font-serif italic ml-0.5">.dev</span>
+            </span>
           </Link>
 
           {/* Desktop Menu */}
           <div className="hidden md:flex space-x-1 items-center font-medium">
-            {NAV_LINKS.map((link) => (
-              <Link
-                key={link.href}
-                href={link.href}
-                className={`px-3 py-2 rounded-lg text-sm transition duration-200 ${
-                  pathname === link.href
-                    ? "text-cyan-400 bg-cyan-500/10"
-                    : "text-gray-300 hover:text-white hover:bg-slate-800"
-                }`}
-              >
-                {link.label}
-              </Link>
-            ))}
+            {NAV_LINKS.map((link) => {
+              const isActive = pathname === link.href;
+              return (
+                <Link
+                  key={link.href}
+                  href={link.href}
+                  className={`px-3.5 py-1.5 rounded-full text-sm font-medium transition duration-200 ${
+                    isActive
+                      ? "text-[#022C22] bg-[#F8E7C9] font-semibold shadow-md shadow-[#F8E7C9]/10"
+                      : "text-[#D4C3A3] hover:text-[#FAF4E8] hover:bg-[#064E3B]/40"
+                  }`}
+                >
+                  {link.label}
+                </Link>
+              );
+            })}
             <a
               href="/resume.pdf"
               target="_blank"
               rel="noopener noreferrer"
-              className="ml-3 px-5 py-2 bg-cyan-600 rounded-full text-sm hover:bg-cyan-500 transition shadow-lg shadow-cyan-500/20"
+              className="ml-3 px-4 py-1.5 rounded-full text-sm font-semibold bg-[#F8E7C9] text-[#022C22] hover:bg-[#FAF4E8] transition-all duration-300 shadow-md shadow-[#F8E7C9]/20 hover:shadow-[#F8E7C9]/40 flex items-center gap-1.5 hover:-translate-y-0.5"
             >
+              <FileText className="w-3.5 h-3.5" />
               Resume
             </a>
           </div>
@@ -55,12 +65,10 @@ export default function Navbar() {
           <div className="md:hidden flex items-center">
             <button
               onClick={() => setIsOpen(!isOpen)}
-              className="outline-none text-gray-300 hover:text-white p-1"
+              className="outline-none text-[#D4C3A3] hover:text-[#F8E7C9] p-2 rounded-lg bg-[#064E3B]/30 border border-[#F8E7C9]/15"
               aria-label="Toggle menu"
             >
-              <svg className="w-6 h-6" fill="none" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" viewBox="0 0 24 24" stroke="currentColor">
-                {isOpen ? <path d="M6 18L18 6M6 6l12 12" /> : <path d="M4 6h16M4 12h16M4 18h16" />}
-              </svg>
+              {isOpen ? <X className="w-5 h-5 text-[#F8E7C9]" /> : <Menu className="w-5 h-5 text-[#F8E7C9]" />}
             </button>
           </div>
         </div>
@@ -68,27 +76,35 @@ export default function Navbar() {
 
       {/* Mobile Dropdown */}
       {isOpen && (
-        <div className="md:hidden bg-slate-900 border-t border-slate-800 pb-4 px-4 shadow-xl">
-          {NAV_LINKS.map((link) => (
-            <Link
-              key={link.href}
-              href={link.href}
-              onClick={() => setIsOpen(false)}
-              className={`block py-3 text-sm border-b border-slate-800 transition ${
-                pathname === link.href ? "text-cyan-400" : "hover:text-cyan-400"
-              }`}
+        <div className="md:hidden bg-[#022C22] border-b border-[#F8E7C9]/20 pb-5 px-6 pt-2 shadow-2xl backdrop-blur-xl">
+          <div className="flex flex-col space-y-2 mt-2">
+            {NAV_LINKS.map((link) => {
+              const isActive = pathname === link.href;
+              return (
+                <Link
+                  key={link.href}
+                  href={link.href}
+                  onClick={() => setIsOpen(false)}
+                  className={`py-2.5 px-4 rounded-xl text-sm font-medium transition ${
+                    isActive
+                      ? "text-[#022C22] bg-[#F8E7C9] font-semibold"
+                      : "text-[#D4C3A3] hover:text-[#FAF4E8] hover:bg-[#064E3B]/50"
+                  }`}
+                >
+                  {link.label}
+                </Link>
+              );
+            })}
+            <a
+              href="/resume.pdf"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="mt-3 text-center py-2.5 bg-[#F8E7C9] text-[#022C22] font-semibold rounded-xl text-sm hover:bg-[#FAF4E8] transition flex items-center justify-center gap-2 shadow-lg"
             >
-              {link.label}
-            </Link>
-          ))}
-          <a
-            href="/resume.pdf"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="block mt-3 text-center py-2.5 bg-cyan-600 rounded-full text-sm hover:bg-cyan-500 transition"
-          >
-            Resume
-          </a>
+              <FileText className="w-4 h-4" />
+              View Resume
+            </a>
+          </div>
         </div>
       )}
     </nav>
