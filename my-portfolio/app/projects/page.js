@@ -19,8 +19,8 @@ const PINNED_PROJECTS = [
       "A full-stack browser extension that turns passive reading into active vocabulary building. Engineered with Manifest V3 background service workers, closed Shadow DOM tooltips for zero host-CSS leakage, and a Node.js/Express REST API backed by MongoDB Atlas with smart multi-tier caching and morphological fallbacks.",
     techStack: ["Browser Extension MV3", "Shadow DOM", "Node.js", "Express.js", "MongoDB Atlas", "Docker", "JWT", "Jest"],
     githubLink: "https://github.com/Yogendra-Bisht/WordCatch",
-    liveLink: "https://wordcatch.onrender.com/health",
-    status: "In Edge Review & Render Live",
+    liveLink: "https://microsoftedge.microsoft.com/addons/detail/phgiaghmefmfigmhahigfdlgacifeglb",
+    status: "Live(Currently for Microsoft Edge)",
     features: [
       "Closed Shadow DOM tooltip isolates UI from host website CSS conflicts",
       "Service Worker JWT custody prevents content-script network credential exposure",
