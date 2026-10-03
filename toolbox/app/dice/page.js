@@ -1,124 +1,226 @@
-"use client"
-import React, { useState } from 'react'
-import { ArrowLeft } from 'lucide-react'
-import Link from 'next/link'
+"use client";
+import React, { useState } from "react";
+import { ArrowLeft, Disc, Volume2, VolumeX, RotateCw } from "lucide-react";
+import Link from "next/link";
+import { useToast } from "../components/ToastContext";
+import { saveToHistory } from "../components/HistoryDrawer";
 
-// Dice dot layout patterns for each face (1–6)
-const diceDots = {
-  1: [[50, 50]],
-  2: [[25, 25], [75, 75]],
-  3: [[25, 25], [50, 50], [75, 75]],
-  4: [[25, 25], [75, 25], [25, 75], [75, 75]],
-  5: [[25, 25], [75, 25], [50, 50], [25, 75], [75, 75]],
-  6: [[25, 22], [75, 22], [25, 50], [75, 50], [25, 78], [75, 78]],
-};
+const diceTypes = [
+  { name: "d4", max: 4 },
+  { name: "d6", max: 6 },
+  { name: "d8", max: 8 },
+  { name: "d10", max: 10 },
+  { name: "d12", max: 12 },
+  { name: "d20", max: 20 },
+  { name: "d100", max: 100 },
+];
 
-const DiceFace = ({ value }) => {
-  const dots = diceDots[value] || [];
+export default function DicePage() {
+  const [selectedType, setSelectedType] = useState(diceTypes[1]); // d6
+  const [diceCount, setDiceCount] = useState(2);
+  const [rolls, setRolls] = useState([]);
+  const [isRolling, setIsRolling] = useState(false);
+  const [soundEnabled, setSoundEnabled] = useState(true);
+
+  const { addToast } = useToast();
+
+  const playRollSound = () => {
+    if (!soundEnabled) return;
+    try {
+      const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+      const osc = audioCtx.createOscillator();
+      const gain = audioCtx.createGain();
+      osc.type = "sawtooth";
+      osc.frequency.setValueAtTime(150, audioCtx.currentTime);
+      osc.frequency.exponentialRampToValueAtTime(40, audioCtx.currentTime + 0.15);
+      gain.gain.setValueAtTime(0.3, audioCtx.currentTime);
+      gain.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.15);
+      osc.connect(gain);
+      gain.connect(audioCtx.destination);
+      osc.start();
+      osc.stop(audioCtx.currentTime + 0.15);
+    } catch {
+      // Audio fallback silent
+    }
+  };
+
+  const handleRoll = () => {
+    setIsRolling(true);
+    playRollSound();
+
+    setTimeout(() => {
+      const newRolls = [];
+      const array = new Uint32Array(diceCount);
+      window.crypto.getRandomValues(array);
+
+      for (let i = 0; i < diceCount; i++) {
+        const val = (array[i] % selectedType.max) + 1;
+        newRolls.push(val);
+      }
+
+      setRolls(newRolls);
+      setIsRolling(false);
+
+      const sum = newRolls.reduce((a, b) => a + b, 0);
+      saveToHistory({
+        tool: "Dice",
+        val: `${newRolls.join(", ")} (Sum: ${sum})`,
+        detail: `${diceCount}x ${selectedType.name}`,
+      });
+      addToast(`Rolled Total: ${sum}`);
+    }, 400);
+  };
+
+  const sum = rolls.reduce((a, b) => a + b, 0);
+  const maxRoll = rolls.length > 0 ? Math.max(...rolls) : 0;
+  const minRoll = rolls.length > 0 ? Math.min(...rolls) : 0;
+  const avgRoll = rolls.length > 0 ? (sum / rolls.length).toFixed(1) : 0;
+
   return (
-    <div className="relative w-36 h-36 rounded-3xl bg-slate-950 border-2 border-rose-500/30 shadow-[0_0_40px_rgba(244,63,94,0.15)] overflow-hidden">
-      <div className="absolute inset-0 bg-rose-500/5" />
-      {dots.map((dot, i) => (
-        <div
-          key={i}
-          className="absolute w-7 h-7 rounded-full bg-rose-400 shadow-[0_0_10px_rgba(251,113,133,0.6)] -translate-x-1/2 -translate-y-1/2"
-          style={{ left: `${dot[0]}%`, top: `${dot[1]}%` }}
-        />
-      ))}
-    </div>
-  );
-};
+    <div className="min-h-screen bg-slate-950 text-white flex flex-col items-center justify-center px-4 pt-24 pb-16 relative overflow-hidden">
+      
+      {/* Background Glow */}
+      <div className="absolute top-1/3 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] bg-rose-600/10 rounded-full blur-[140px] pointer-events-none -z-10" />
 
-const page = () => {
-  const [dice, setdice] = useState(0)
-
-  function shownum() {
-    let num = Math.floor(Math.random() * 10);
-    let final = num % 6;
-    final = final + 1;
-    setdice(final);
-  }
-
-  return (
-    <div className="min-h-screen bg-slate-950 text-white flex flex-col items-center justify-center px-4 pt-16 relative overflow-hidden">
-
-      {/* Background glow */}
-      <div className="absolute top-1/3 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[500px] h-[500px] bg-rose-600/15 rounded-full blur-[130px] pointer-events-none" />
-
-      <div className="relative w-full max-w-md">
-
+      <div className="relative w-full max-w-xl">
+        
         {/* Back link */}
-        <Link href="/" className="group flex items-center gap-2 text-slate-400 hover:text-white transition-colors mb-8 w-fit">
-          <ArrowLeft size={16} className="group-hover:-translate-x-1 transition-transform duration-200" />
-          <span className="text-sm">Back to Tools</span>
+        <Link
+          href="/"
+          className="group flex items-center gap-2 text-slate-400 hover:text-white transition-colors mb-6 w-fit"
+        >
+          <ArrowLeft size={16} className="group-hover:-translate-x-1 transition-transform" />
+          <span className="text-sm">Back to Hub</span>
         </Link>
 
-        {/* Card */}
-        <div className="p-8 rounded-3xl border border-slate-800 bg-slate-900/50 backdrop-blur-xl shadow-2xl shadow-black/50">
-
+        {/* Main Card */}
+        <div className="p-6 sm:p-8 rounded-3xl border border-slate-800 bg-slate-900 shadow-2xl space-y-8">
+          
           {/* Header */}
-          <div className="flex items-center gap-4 mb-8">
-            <div className="p-3 bg-rose-500/15 rounded-2xl border border-rose-500/20">
-              {/* Custom dice icon */}
-              <svg className="text-rose-400 w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth={1.8}>
-                <rect x="3" y="3" width="18" height="18" rx="4" />
-                <circle cx="8.5" cy="8.5" r="1.2" fill="currentColor" />
-                <circle cx="15.5" cy="8.5" r="1.2" fill="currentColor" />
-                <circle cx="12" cy="12" r="1.2" fill="currentColor" />
-                <circle cx="8.5" cy="15.5" r="1.2" fill="currentColor" />
-                <circle cx="15.5" cy="15.5" r="1.2" fill="currentColor" />
-              </svg>
+          <div className="flex items-center justify-between">
+            <div className="flex items-center gap-4">
+              <div className="p-3 bg-rose-500/15 rounded-2xl border border-rose-500/30 text-rose-400">
+                <Disc size={28} />
+              </div>
+              <div>
+                <h1 className="text-2xl font-bold text-white">Multi-Dice & Physics Roller</h1>
+                <p className="text-slate-400 text-xs sm:text-sm mt-0.5">
+                  Polyhedral dice simulator (d4 to d100)
+                </p>
+              </div>
             </div>
+
+            <button
+              onClick={() => setSoundEnabled(!soundEnabled)}
+              className="p-2.5 rounded-xl bg-slate-950 border border-slate-800 text-slate-400 hover:text-rose-400 transition-colors"
+              title="Toggle Audio Feedback"
+            >
+              {soundEnabled ? <Volume2 size={18} /> : <VolumeX size={18} />}
+            </button>
+          </div>
+
+          {/* Dice Type & Count Controls */}
+          <div className="space-y-4 pt-2">
             <div>
-              <h1 className="text-2xl font-bold text-white">Virtual Dice</h1>
-              <p className="text-slate-400 text-sm mt-0.5">Roll for games or quick decisions</p>
+              <span className="block text-xs font-semibold text-slate-400 uppercase tracking-wider mb-2">
+                Dice Type
+              </span>
+              <div className="flex flex-wrap gap-2">
+                {diceTypes.map((type) => (
+                  <button
+                    key={type.name}
+                    onClick={() => setSelectedType(type)}
+                    className={`px-3.5 py-2 rounded-xl text-xs font-bold font-mono transition-all cursor-pointer ${
+                      selectedType.name === type.name
+                        ? "bg-rose-600 text-white shadow-lg shadow-rose-500/25 border border-rose-400"
+                        : "bg-slate-950/60 border border-slate-800 text-slate-400 hover:text-white"
+                    }`}
+                  >
+                    {type.name}
+                  </button>
+                ))}
+              </div>
+            </div>
+
+            <div className="flex items-center justify-between pt-2">
+              <span className="text-xs font-semibold text-slate-400 uppercase tracking-wider">
+                Dice Quantity
+              </span>
+              <div className="flex items-center gap-2">
+                {[1, 2, 3, 4, 5, 6].map((num) => (
+                  <button
+                    key={num}
+                    onClick={() => setDiceCount(num)}
+                    className={`w-8 h-8 rounded-lg font-mono text-xs font-bold transition-all cursor-pointer ${
+                      diceCount === num
+                        ? "bg-rose-600 text-white shadow-lg shadow-rose-500/20"
+                        : "bg-slate-950 border border-slate-800 text-slate-400 hover:text-white"
+                    }`}
+                  >
+                    {num}
+                  </button>
+                ))}
+              </div>
             </div>
           </div>
 
-          {/* Dice Display */}
-          <div className="flex flex-col items-center mb-8 gap-6">
-            {dice > 0 ? (
-              <DiceFace value={dice} />
-            ) : (
-              <div className="w-36 h-36 rounded-3xl border-2 border-dashed border-slate-700 flex items-center justify-center">
-                <span className="text-slate-600 text-4xl font-bold select-none">?</span>
-              </div>
-            )}
+          {/* Interactive Dice Roller Grid */}
+          <div className="space-y-6">
+            <div className="min-h-[140px] p-6 rounded-2xl border border-slate-800 bg-slate-950/80 flex flex-wrap items-center justify-center gap-4">
+              {rolls.length > 0 ? (
+                rolls.map((val, idx) => (
+                  <div
+                    key={idx}
+                    className={`w-16 h-16 sm:w-20 sm:h-20 rounded-2xl bg-gradient-to-br from-rose-950 to-slate-950 border-2 border-rose-500/40 shadow-[0_0_25px_rgba(244,63,94,0.2)] flex items-center justify-center font-mono text-2xl sm:text-3xl font-black text-rose-300 ${
+                      isRolling ? "animate-spin-slow scale-90 opacity-50" : "animate-bounce"
+                    }`}
+                  >
+                    {val}
+                  </div>
+                ))
+              ) : (
+                <div className="text-center text-slate-600 py-6">
+                  <p className="text-sm font-semibold">Ready to roll!</p>
+                  <p className="text-xs text-slate-700 mt-0.5">Click the button below to roll {diceCount}x {selectedType.name}</p>
+                </div>
+              )}
+            </div>
 
-            {dice > 0 && (
-              <div className="flex items-center gap-3">
-                <div className="h-px w-12 bg-slate-800" />
-                <span className="text-slate-400 text-sm">
-                  Rolled a <span className="text-rose-400 font-bold text-lg">{dice}</span>
-                </span>
-                <div className="h-px w-12 bg-slate-800" />
+            {/* Analytics Box */}
+            {rolls.length > 0 && (
+              <div className="grid grid-cols-4 gap-2 text-center p-4 rounded-2xl bg-slate-950 border border-slate-800/80">
+                <div>
+                  <span className="block text-[10px] text-slate-500 font-bold uppercase">Total Sum</span>
+                  <span className="font-mono text-lg font-extrabold text-rose-400">{sum}</span>
+                </div>
+                <div>
+                  <span className="block text-[10px] text-slate-500 font-bold uppercase">Average</span>
+                  <span className="font-mono text-lg font-extrabold text-slate-300">{avgRoll}</span>
+                </div>
+                <div>
+                  <span className="block text-[10px] text-slate-500 font-bold uppercase">Highest</span>
+                  <span className="font-mono text-lg font-extrabold text-emerald-400">{maxRoll}</span>
+                </div>
+                <div>
+                  <span className="block text-[10px] text-slate-500 font-bold uppercase">Lowest</span>
+                  <span className="font-mono text-lg font-extrabold text-amber-400">{minRoll}</span>
+                </div>
               </div>
             )}
           </div>
 
           {/* Roll Button */}
           <button
-            onClick={shownum}
-            className="w-full flex items-center justify-center gap-3 py-4 rounded-2xl bg-rose-600 hover:bg-rose-500 active:scale-[0.97] transition-all duration-200 font-semibold text-white text-lg shadow-lg shadow-rose-500/25 cursor-pointer"
+            onClick={handleRoll}
+            disabled={isRolling}
+            className="w-full flex items-center justify-center gap-3 py-4 rounded-2xl bg-rose-600 hover:bg-rose-500 active:scale-[0.98] transition-all font-bold text-white text-base shadow-xl shadow-rose-600/25 cursor-pointer disabled:opacity-50"
           >
-            <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth={2.2}>
-              <path strokeLinecap="round" strokeLinejoin="round" d="M19.5 12c0-1.232-.046-2.453-.138-3.662a4.006 4.006 0 0 0-3.7-3.7 48.678 48.678 0 0 0-7.324 0 4.006 4.006 0 0 0-3.7 3.7c-.017.22-.032.441-.046.662M19.5 12l3-3m-3 3-3-3m-12 3c0 1.232.046 2.453.138 3.662a4.006 4.006 0 0 0 3.7 3.7 48.656 48.656 0 0 0 7.324 0 4.006 4.006 0 0 0 3.7-3.7c.017-.22.032-.441.046-.662M4.5 12l3 3m-3-3-3 3" />
-            </svg>
-            Roll the Dice
+            <RotateCw size={18} className={isRolling ? "animate-spin" : ""} />
+            Roll {diceCount}x {selectedType.name}
           </button>
 
-          <p className="text-center text-slate-600 text-xs mt-5">
-            Standard 6-sided die · click to roll
-          </p>
         </div>
-
-        {/* Tag */}
-        <p className="text-center text-slate-700 text-xs mt-6">
-          Utility Toolbox · Virtual Dice
-        </p>
       </div>
     </div>
-  )
+  );
 }
-
-export default page
