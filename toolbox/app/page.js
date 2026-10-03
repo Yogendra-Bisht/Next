@@ -1,16 +1,5 @@
-import React from 'react'
-import Navbar from './components/Navbar'
 import Home from './components/Home'
 
-const page = () => {
-  return (
-    <>
-    
-    <Home/>
-    
-    
-    </>
-  )
+export default function Page() {
+  return <Home />
 }
-
-export default page
