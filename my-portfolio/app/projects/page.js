@@ -112,7 +112,7 @@ const SECONDARY_PROJECTS = [
       "Modern portfolio built with Next.js App Router and Tailwind CSS. Integrated with a streaming Groq LLaMA 3.1 AI chatbot assistant, Framer Motion transitions, and speed insights.",
     techStack: ["Next.js", "Tailwind CSS", "Framer Motion", "Groq AI"],
     githubLink: "https://github.com/Yogendra-Bisht/Next/tree/main/my-portfolio",
-    liveLink: "https://my-portfolio-nine-jet-47.vercel.app/",
+    liveLink: "https://www.yogendrabisht.dev/",
     status: "Live",
   },
   {

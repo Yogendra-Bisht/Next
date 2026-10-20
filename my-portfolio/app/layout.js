@@ -17,9 +17,13 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata = {
+  metadataBase: new URL("https://www.yogendrabisht.dev"),
   title: "Yogendra Bisht | Full-Stack Developer",
   description: "Portfolio of Yogendra Bisht — MCA student specializing in Next.js, React, Java, and DSA. Explore my projects and get in touch!",
   keywords: ["Yogendra Bisht", "portfolio", "Next.js developer", "React", "Java", "full-stack"],
+  alternates: {
+    canonical: "https://www.yogendrabisht.dev",
+  },
   verification: {
     google: "27aVhN8bmTpfZVLu1e6P0_FhwbqQ0IDLXoqCGo1L_Kc",
   },

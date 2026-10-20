@@ -1,31 +1,31 @@
 export default function sitemap() {
   return [
     {
-      url: 'https://my-portfolio-nine-jet-47.vercel.app',
+      url: 'https://www.yogendrabisht.dev',
       lastModified: new Date(),
       changeFrequency: 'yearly',
       priority: 1,
     },
     {
-      url: 'https://my-portfolio-nine-jet-47.vercel.app/projects',
+      url: 'https://www.yogendrabisht.dev/projects',
       lastModified: new Date(),
       changeFrequency: 'monthly',
       priority: 0.8,
     },
     {
-      url: 'https://my-portfolio-nine-jet-47.vercel.app/skills',
+      url: 'https://www.yogendrabisht.dev/skills',
       lastModified: new Date(),
       changeFrequency: 'monthly',
       priority: 0.5,
     },
     {
-      url: 'https://my-portfolio-nine-jet-47.vercel.app/certifications',
+      url: 'https://www.yogendrabisht.dev/certifications',
       lastModified: new Date(),
       changeFrequency: 'yearly',
       priority: 0.7,
     },
     {
-      url: 'https://my-portfolio-nine-jet-47.vercel.app/contact',
+      url: 'https://www.yogendrabisht.dev/contact',
       lastModified: new Date(),
       changeFrequency: 'yearly',
       priority: 0.5,

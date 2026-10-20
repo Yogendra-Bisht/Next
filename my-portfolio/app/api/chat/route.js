@@ -33,7 +33,7 @@ Engineered Software & DevOps Developer with an MCA degree (2026) from HNB Garhwa
 
 5. zodify-json — Client-side JSON to Zod Schema & TypeScript type generator. Parses raw JSON in browser memory to eliminate validation boilerplate. Status: Live. Live Link: https://zodify-json.vercel.app | GitHub: https://github.com/Yogendra-Bisht/zodify-json.
 
-6. Portfolio Website — Personal engineering portfolio built with Next.js App Router, Tailwind CSS v4, Framer Motion, and Groq LLaMA 3.1 streaming AI chatbot. Status: Live. Live Link: https://my-portfolio-nine-jet-47.vercel.app/.
+6. Portfolio Website — Personal engineering portfolio built with Next.js App Router, Tailwind CSS v4, Framer Motion, and Groq LLaMA 3.1 streaming AI chatbot. Status: Live. Live Link: https://www.yogendrabisht.dev/.
 
 7. Utility Toolbox — Modular web utility app featuring password generator, OTP generator, and random number engine. Status: Live. Live Link: https://utility-toolbox-phi.vercel.app.
 
