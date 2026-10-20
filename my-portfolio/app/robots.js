@@ -5,6 +5,6 @@ export default function robots() {
       allow: '/',         // Allow them to visit everything
       disallow: '/private/', // (Optional) Block them from private folders
     },
-    sitemap: 'https://my-portfolio-nine-jet-47.vercel.app/sitemap.xml',
+    sitemap: 'https://www.yogendrabisht.dev/sitemap.xml',
   }
 }
